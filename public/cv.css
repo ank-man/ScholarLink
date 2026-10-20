@@ -52,3 +52,68 @@
 .paper.sidebar aside .skills div { margin-bottom: 5pt; }
 .paper.sidebar aside .skills b { display: block; }
 .paper { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+/* Ivy: Garamond, left-aligned, small caps; the traditional humanities look */
+.paper.ivy { font-family: "EB Garamond", Garamond, Georgia, serif; font-size: 11.5pt; line-height: 1.35; }
+.paper.ivy h1 { font-family: "EB Garamond", Garamond, Georgia, serif; font-variant: small-caps; font-size: 26pt; letter-spacing: .02em; font-weight: 500; }
+.paper.ivy header { border-bottom: 1.5pt solid #111; padding-bottom: 6pt; }
+.paper.ivy h2 { font-family: "EB Garamond", Garamond, Georgia, serif; font-variant: small-caps; text-transform: none; letter-spacing: .06em; font-size: 13pt; font-weight: 600; border-bottom: .75pt solid #888; }
+
+/* Minimal: headings in a left column, lots of white space */
+.paper.minimal { font-family: "Inter", Arial, sans-serif; font-size: 9.6pt; color: #222; }
+.paper.minimal h1 { font-family: "Inter", Arial, sans-serif; font-weight: 300; font-size: 26pt; letter-spacing: -.02em; }
+.paper.minimal header { padding-bottom: 10pt; margin-bottom: 4pt; border-bottom: .75pt solid #ddd; }
+.paper.minimal section { display: grid; grid-template-columns: 1.25in 1fr; gap: 0 14pt; padding-top: 12pt; }
+.paper.minimal section > h2 { grid-column: 1; grid-row: 1 / span 30; }
+.paper.minimal section > :not(h2) { grid-column: 2; }
+.paper.minimal h2 { margin: 0; border: 0; padding: 0; font-size: 8.5pt; color: var(--accent); }
+
+/* Banner: a bold colored header band */
+.paper.banner { font-family: "Inter", Arial, sans-serif; font-size: 9.8pt; padding-top: 0; }
+.paper.banner header { background: var(--accent); color: #fff; margin: 0 -.7in 6pt; padding: .45in .7in .35in; }
+.paper.banner h1 { color: #fff; font-family: "Inter", Arial, sans-serif; font-weight: 800; font-size: 25pt; }
+.paper.banner .headline, .paper.banner .contact { color: rgba(255, 255, 255, .88); }
+.paper.banner .contact span + span::before { color: rgba(255, 255, 255, .5); }
+.paper.banner h2 { color: var(--accent); border-bottom: 0; padding: 0 0 0 8pt; border-left: 3pt solid var(--accent); }
+
+/* Compact: tight spacing to fit one page */
+.paper.compact { font-size: 9.4pt; line-height: 1.32; padding: .5in .6in; }
+.paper.compact h1 { font-size: 20pt; }
+.paper.compact header { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 0 16pt; border-bottom: 1.5pt solid var(--accent); padding-bottom: 5pt; }
+.paper.compact header .contact { text-align: right; max-width: 3.4in; grid-column: 2; grid-row: 1 / span 2; }
+.paper.compact .headline { margin: 0; }
+.paper.compact header .contact span { display: block; }
+.paper.compact header .contact span + span::before { content: none; }
+.paper.compact h2 { margin: 10pt 0 4pt; background: color-mix(in srgb, var(--accent) 10%, #fff); color: var(--accent); border: 0; padding: 2pt 6pt; font-size: 8.8pt; }
+.paper.compact .entry { margin-bottom: 4pt; }
+.paper.compact ul { margin-top: 0; }
+
+/* Elegant: centered with ornamented headings */
+.paper.elegant { font-size: 10.5pt; }
+.paper.elegant header { text-align: center; }
+.paper.elegant h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 28pt; letter-spacing: -.01em; color: var(--accent); }
+.paper.elegant .headline { font-style: italic; }
+.paper.elegant h2 { font-family: "Fraunces", Georgia, serif; text-align: center; text-transform: none; letter-spacing: .02em; font-size: 13pt; font-weight: 600; font-style: italic; border: 0; display: flex; align-items: center; gap: 10pt; }
+.paper.elegant h2::before, .paper.elegant h2::after { content: ""; flex: 1; border-top: .75pt solid #bbb; }
+
+/* Rail: dates in a left column with a rail */
+.paper.rail { font-family: "Inter", Arial, sans-serif; font-size: 9.6pt; }
+.paper.rail h1 { font-family: "Inter", Arial, sans-serif; font-weight: 800; font-size: 23pt; }
+.paper.rail h1::after { content: ""; display: block; width: 40pt; height: 3pt; background: var(--accent); margin-top: 6pt; border-radius: 2pt; }
+.paper.rail h2 { border-bottom: 0; color: var(--accent); }
+.paper.rail .entry { position: relative; padding-left: 1.2in; }
+.paper.rail .entry::before { content: ""; position: absolute; left: 1.05in; top: 4pt; bottom: -4pt; border-left: 1pt solid #ddd; }
+.paper.rail .entry::after { content: ""; position: absolute; left: calc(1.05in - 3pt); top: 4pt; width: 7pt; height: 7pt; border-radius: 50%; background: var(--accent); }
+.paper.rail .entry > .line:first-child .r { position: absolute; left: 0; top: 1pt; width: .95in; white-space: normal; text-align: left; font-size: 8.6pt; color: var(--accent); font-weight: 600; }
+.paper.rail .entry.line { padding-left: 0; }
+.paper.rail .entry.line::before, .paper.rail .entry.line::after { content: none; }
+
+/* Tech: monospace accents for CS and engineering */
+.paper.tech { font-family: "Inter", Arial, sans-serif; font-size: 9.6pt; }
+.paper.tech h1 { font-family: "JetBrains Mono", Menlo, monospace; font-weight: 700; font-size: 21pt; letter-spacing: -.02em; }
+.paper.tech h1::before { content: "> "; color: var(--accent); }
+.paper.tech .contact { font-family: "JetBrains Mono", Menlo, monospace; font-size: 8.4pt; }
+.paper.tech h2 { font-family: "JetBrains Mono", Menlo, monospace; text-transform: lowercase; letter-spacing: 0; font-size: 10pt; border-bottom: 1pt dashed #bbb; color: #111; }
+.paper.tech h2::before { content: "// "; color: var(--accent); }
+.paper.tech .t { color: #111; }
+.paper.tech .skills b { font-family: "JetBrains Mono", Menlo, monospace; font-size: 8.6pt; color: var(--accent); }

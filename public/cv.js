@@ -49,6 +49,77 @@ const EXAMPLE = {
   },
 }
 
+const TEMPLATES = [
+  { id: "classic", name: "Classic", tag: "Traditional", desc: "Centered serif, the safe academic default" },
+  { id: "ivy", name: "Ivy", tag: "Traditional", desc: "Garamond and small caps, great for humanities" },
+  { id: "elegant", name: "Elegant", tag: "Traditional", desc: "Centered with ornamented headings" },
+  { id: "modern", name: "Modern", tag: "Modern", desc: "Clean sans-serif with an accent color" },
+  { id: "minimal", name: "Minimal", tag: "Modern", desc: "Headings in a left column, lots of air" },
+  { id: "rail", name: "Rail", tag: "Modern", desc: "Dates down the side with a rail" },
+  { id: "banner", name: "Banner", tag: "Creative", desc: "Bold colored header band" },
+  { id: "sidebar", name: "Sidebar", tag: "Creative", desc: "Two columns with a tinted side panel" },
+  { id: "tech", name: "Tech", tag: "Creative", desc: "Monospace touches for CS and engineering" },
+  { id: "compact", name: "Compact", tag: "One page", desc: "Tight spacing to fit everything on one page" },
+]
+// Word can't do grids or columns, so those templates export with the Modern layout.
+const WORD_FALLBACK = { sidebar: "modern", minimal: "modern", rail: "modern", banner: "modern" }
+
+// Starter CVs for different fields. All people, labs, and details are made up.
+const person = (name, headline, email, links) => ({ name, headline, email, phone: "(706) 555-0142", location: "Athens, GA", links })
+const STARTERS = {
+  biology: { label: "🧬 Biology / Genetics", template: "classic", cv: EXAMPLE },
+  cs: { label: "💻 Computer Science", template: "tech", cv: {
+    header: person("Alex Chen", "Undergraduate Researcher · Computer Science", "alex.chen@uga.edu", "github.com/alexchen, alexchen.dev"),
+    sections: {
+      summary: [{ text: "Machine learning for scientific data, with a focus on robust models for small, noisy datasets." }],
+      education: [{ title: "B.S. in Computer Science, Minor in Mathematics", org: "University of Georgia", location: "Athens, GA", dates: "Expected May 2027", details: "GPA: 3.9/4.0 · Honors Program\nCoursework: Machine Learning, Algorithms, Linear Algebra, Probability" }],
+      research: [{ title: "Undergraduate Researcher", org: "Applied ML Lab, School of Computing (PI: Dr. Ravi Patel)", location: "Athens, GA", dates: "Aug 2024 – Present", details: "Trained convolutional models to classify 50,000 microscope images with 94% accuracy\nBuilt a data-augmentation pipeline in PyTorch that cut labeling needs by 40%\nCo-authored a workshop paper (under review)" }],
+      publications: [{ text: "**Chen, A.**, & Patel, R. (2026). Few-shot classification of microscopy images. Poster, CURO Symposium, Athens, GA." }],
+      experience: [{ title: "Teaching Assistant, Data Structures", org: "School of Computing", location: "Athens, GA", dates: "Jan 2025 – Present", details: "Hold weekly office hours and grade projects for 120 students" }],
+      work: [{ title: "Software Engineering Intern", org: "Example Tech Co.", location: "Atlanta, GA", dates: "May – Aug 2025", details: "Shipped a caching service that reduced API latency by 35%" }],
+      awards: [{ title: "CURO Summer Fellowship", org: "University of Georgia", dates: "2025" }, { title: "Hackathon winner, Best Use of Data", org: "UGAHacks", dates: "2024" }],
+      skills: [{ label: "Languages", items: "Python, C++, Java, SQL" }, { label: "ML & Data", items: "PyTorch, scikit-learn, pandas, NumPy" }, { label: "Tools", items: "Git, Docker, Linux, AWS" }],
+      references: [{ name: "Dr. Ravi Patel", title: "Associate Professor of Computer Science", org: "University of Georgia", email: "rpatel@uga.edu" }],
+    } } },
+  psych: { label: "🧠 Psychology / Social Science", template: "modern", cv: {
+    header: person("Maya Robinson", "Undergraduate Researcher · Psychology", "maya.robinson@uga.edu", "linkedin.com/in/mayarobinson"),
+    sections: {
+      summary: [{ text: "Adolescent development, social media use, and emotion regulation, using longitudinal and experimental methods." }],
+      education: [{ title: "B.S. in Psychology, Minor in Statistics", org: "University of Georgia", location: "Athens, GA", dates: "Expected May 2027", details: "GPA: 3.85/4.0 · Psi Chi\nHonors thesis: Social media use and sleep in early adolescence (advisor: Dr. Lena Ortiz)" }],
+      research: [{ title: "Research Assistant", org: "Youth Development Lab, Department of Psychology (PI: Dr. Lena Ortiz)", location: "Athens, GA", dates: "Jan 2025 – Present", details: "Ran 60 participant sessions for a study on adolescent emotion regulation\nCleaned and analyzed survey data from 400 families in R\nCo-wrote an IRB amendment and recruitment materials" }],
+      publications: [{ text: "**Robinson, M.**, & Ortiz, L. (2026). Screen time and sleep quality in early adolescence. Poster, Southeastern Psychological Association, Atlanta, GA." }],
+      experience: [{ title: "Peer Mentor", org: "UGA Psychology Undergraduate Mentoring Program", location: "Athens, GA", dates: "Aug 2024 – Present", details: "Mentor 6 first-year psychology majors on research and course planning" }],
+      work: [], awards: [{ title: "CURO Research Assistantship", org: "University of Georgia", dates: "2025" }],
+      skills: [{ label: "Methods", items: "Survey design, experimental design, structured interviews, IRB protocols" }, { label: "Analysis", items: "R, SPSS, multilevel modeling, Qualtrics" }],
+      references: [{ name: "Dr. Lena Ortiz", title: "Associate Professor of Psychology", org: "University of Georgia", email: "lortiz@uga.edu" }],
+    } } },
+  humanities: { label: "📚 History / Humanities", template: "ivy", cv: {
+    header: person("Samuel Okafor", "History & Classics", "samuel.okafor@uga.edu", ""),
+    sections: {
+      summary: [{ text: "Atlantic world history, the African diaspora, and the history of the book in the eighteenth century." }],
+      education: [{ title: "B.A. in History and Classics", org: "University of Georgia", location: "Athens, GA", dates: "Expected May 2027", details: "GPA: 3.9/4.0 · Honors Program · Phi Beta Kappa\nHonors thesis: Print culture and abolition in coastal Georgia, 1780–1810 (advisor: Dr. Clara Hughes)\nLanguages: Latin (advanced), French (reading)" }],
+      research: [{ title: "Archival Research Assistant", org: "Hargrett Rare Book & Manuscript Library", location: "Athens, GA", dates: "Aug 2024 – Present", details: "Catalogued 300 eighteenth-century pamphlets and letters\nWrote finding-aid entries used by visiting researchers" }],
+      publications: [{ text: "**Okafor, S.** (2026). Reading abolition in coastal Georgia. Paper presented at the UGA Undergraduate History Conference, Athens, GA." }],
+      experience: [{ title: "Writing Center Tutor", org: "UGA Writing Center", location: "Athens, GA", dates: "Jan 2025 – Present", details: "Tutor 10+ students a week on argument, evidence, and citation" }],
+      work: [], awards: [{ title: "Foundation Fellowship", org: "University of Georgia", dates: "2023–2027" }, { title: "Best Undergraduate Paper", org: "Department of History", dates: "2025" }],
+      skills: [{ label: "Research", items: "Archival research, paleography, Zotero, digital humanities (Omeka)" }, { label: "Languages", items: "Latin (advanced), French (reading), Spanish (intermediate)" }],
+      references: [{ name: "Dr. Clara Hughes", title: "Professor of History", org: "University of Georgia", email: "chughes@uga.edu" }],
+    } } },
+  business: { label: "📈 Business / Marketing", template: "banner", cv: {
+    header: person("Priya Shah", "Marketing & Data Analytics", "priya.shah@uga.edu", "linkedin.com/in/priyashah"),
+    sections: {
+      summary: [{ text: "Consumer behavior and digital marketing analytics, especially how online reviews shape purchase decisions." }],
+      education: [{ title: "B.B.A. in Marketing, Certificate in Data Analytics", org: "Terry College of Business, University of Georgia", location: "Athens, GA", dates: "Expected May 2027", details: "GPA: 3.8/4.0 · Dean's List\nCoursework: Consumer Behavior, Marketing Research, Business Statistics" }],
+      research: [{ title: "Undergraduate Research Assistant", org: "Department of Marketing (PI: Dr. Daniel Kim)", location: "Athens, GA", dates: "Aug 2025 – Present", details: "Coded 5,000 online reviews for a study on review sentiment and sales\nBuilt Tableau dashboards summarizing survey results for the research team" }],
+      publications: [],
+      experience: [{ title: "Vice President", org: "UGA American Marketing Association", location: "Athens, GA", dates: "Aug 2024 – Present", details: "Led a team of 8 to plan events for 150+ members\nGrew social media engagement by 60% in one semester" }],
+      work: [{ title: "Marketing Analytics Intern", org: "Example Retail Co.", location: "Atlanta, GA", dates: "May – Aug 2025", details: "Analyzed A/B tests on 12 email campaigns; recommendations raised click-through by 18%" }],
+      awards: [{ title: "Terry Scholars Program", org: "Terry College of Business", dates: "2023–2027" }],
+      skills: [{ label: "Analytics", items: "Excel, SQL, Tableau, Google Analytics, Qualtrics" }, { label: "Marketing", items: "Market research, A/B testing, social media strategy" }],
+      references: [{ name: "Dr. Daniel Kim", title: "Associate Professor of Marketing", org: "University of Georgia", email: "dkim@uga.edu" }],
+    } } },
+}
+
 let cv = load() || blankCV()
 function load() {
   try {
@@ -86,13 +157,18 @@ function renderSection(key) {
   return `<section><h2>${esc(def.title)}</h2>${body}</section>`
 }
 
-function paperHTML() {
+function paperHTML(data = cv, template = data.template) {
+  const cvSaved = cv
+  cv = data
+  try { return paperInner(template) } finally { cv = cvSaved }
+}
+function paperInner(template) {
   const h = cv.header
   const contact = [h.email, h.phone, h.location, ...String(h.links || "").split(/[,\n]/)].map((s) => (s || "").trim()).filter(Boolean)
   const head = `<header><h1>${esc(h.name) || `<span class="empty">Your Name</span>`}</h1>
     ${h.headline ? `<p class="headline">${esc(h.headline)}</p>` : ""}
     <p class="contact">${contact.map((c) => `<span>${esc(c)}</span>`).join("")}</p></header>`
-  if (cv.template === "sidebar") {
+  if (template === "sidebar") {
     const side = cv.order.filter((k) => SIDEBAR_KEYS.includes(k)).map(renderSection).join("")
     const main = cv.order.filter((k) => !SIDEBAR_KEYS.includes(k)).map(renderSection).join("")
     return `<aside><h1>${esc(h.name) || `<span class="empty">Your Name</span>`}</h1>${h.headline ? `<p class="headline">${esc(h.headline)}</p>` : ""}
@@ -111,7 +187,22 @@ function renderPreview() {
     p.innerHTML = paperHTML()
     fitPaper()
     meter()
+    thumbsSoon()
   })
+}
+
+// Live mini previews of every template, using your CV (or a sample until you add your name).
+let thumbTimer
+function thumbsSoon() { clearTimeout(thumbTimer); thumbTimer = setTimeout(renderThumbs, 350) }
+function renderThumbs() {
+  const data = cv.header.name.trim() ? cv : { ...STARTERS.biology.cv, order: cv.order, hidden: cv.hidden }
+  for (const box of $$(".tpl-thumb")) {
+    const p = box.firstElementChild
+    p.className = "paper " + box.dataset.t
+    p.style.setProperty("--accent", cv.accent)
+    p.innerHTML = paperHTML(data, box.dataset.t)
+    p.style.transform = `scale(${box.clientWidth / p.offsetWidth})`
+  }
 }
 
 // Scale the 8.5in page to fit the preview column.
@@ -219,7 +310,7 @@ async function downloadWord() {
   try { css = await (await fetch("/cv.css")).text() } catch {}
   const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(fileBase())}</title>
     <style>@page { size: 8.5in 11in; margin: .6in .7in; } ${css} .paper { width: auto; min-height: 0; padding: 0; } .line .r { float: right; }</style></head>
-    <body><div class="paper ${cv.template === "sidebar" ? "modern" : cv.template}" style="--accent:${cv.accent}">${cv.template === "sidebar" ? (() => { const t = cv.template; cv.template = "modern"; const h = paperHTML(); cv.template = t; return h })() : paperHTML()}</div></body></html>`
+    <body><div class="paper ${WORD_FALLBACK[cv.template] || cv.template}" style="--accent:${cv.accent}">${paperHTML(cv, WORD_FALLBACK[cv.template] || cv.template)}</div></body></html>`
   const a = document.createElement("a")
   a.href = URL.createObjectURL(new Blob(["﻿", html], { type: "application/msword" }))
   a.download = fileBase() + ".doc"
@@ -264,6 +355,22 @@ function restore(file) {
 }
 
 function initCV() {
+  $("#cv-gallery").innerHTML = TEMPLATES.map((t) => `<label class="tpl"><input type="radio" name="cv-template" value="${t.id}">
+    <span><span class="tpl-thumb" data-t="${t.id}" aria-hidden="true"><span class="paper"></span></span><b>${t.name} <em>${t.tag}</em></b><small>${t.desc}</small></span></label>`).join("")
+  $("#cv-starter").insertAdjacentHTML("beforeend", Object.entries(STARTERS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join(""))
+  $("#cv-starter").onchange = (e) => {
+    const st = STARTERS[e.target.value]
+    e.target.value = ""
+    if (!st) return
+    if (cv.header.name && !confirm("Replace what you've entered with this example CV?")) return
+    const b = blankCV()
+    cv = { ...b, ...JSON.parse(JSON.stringify(st.cv)), template: st.template, accent: cv.accent }
+    cv.order = st.cv.order || b.order
+    cv.hidden = { work: !(cv.sections.work || []).length }
+    for (const k of Object.keys(SECTIONS)) cv.sections[k] ||= b.sections[k]
+    change(true); toast("Example loaded. Make it yours.")
+  }
+  addEventListener("resize", thumbsSoon)
   $("#cv-accents").innerHTML = ACCENTS.map((c) => `<label class="dot-swatch"><input type="radio" name="cv-accent" value="${c}"><span style="background:${c}"></span></label>`).join("")
   renderEditor()
   renderPreview()
@@ -278,10 +385,6 @@ function initCV() {
   $("#cv-text").onclick = async () => { try { await navigator.clipboard.writeText(plainText()); toast("Plain-text CV copied ✓") } catch { toast("Couldn't copy here") } }
   $("#cv-backup").onclick = backup
   $("#cv-restore").onchange = (e) => e.target.files[0] && restore(e.target.files[0])
-  $("#cv-example").onclick = () => {
-    if (cv.header.name && !confirm("Replace what you've entered with the example CV?")) return
-    cv = JSON.parse(JSON.stringify(EXAMPLE)); change(true); toast("Example loaded. Edit anything.")
-  }
   $("#cv-clear").onclick = () => {
     if (!confirm("Clear your whole CV? Download a backup first if you might want it.")) return
     cv = blankCV(); change(true)
