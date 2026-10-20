@@ -27,7 +27,7 @@
   <div class="guide">
     <nav class="toc" aria-label="Guide sections">
       <a href="#which">1. Which degree?</a><a href="#timeline">2. Timeline</a><a href="#choosing">3. Choosing programs</a>
-      <a href="#faculty">4. Contacting faculty</a><a href="#components">5. What's in an application</a><a href="#sop">6. Statement of purpose</a>
+      <a href="#faculty">4. Cold-emailing faculty</a><a href="#components">5. What's in an application</a><a href="#sop">6. Statement of purpose</a>
       <a href="#letters">7. Recommendation letters</a><a href="#funding">8. Funding & costs</a><a href="#interviews">9. Interviews & visits</a>
       <a href="#decide">10. Deciding</a><a href="#checklist">11. Checklist</a><a href="#questions">12. Questions to ask a mentor</a><a href="#resources">13. Where to get help</a>
     </nav>
@@ -73,24 +73,97 @@
       </section>
 
       <section id="faculty">
-        <h2>4. Contacting potential advisors</h2>
-        <p>In many lab sciences and some social sciences, emailing faculty before applying helps. You can ask whether they're taking students and show genuine interest. In other fields it's uncommon. Ask a mentor what's normal in yours. Keep it short and specific:</p>
-<pre class="template">Subject: Prospective PhD student – interest in [specific topic]
+        <h2>4. Contacting potential advisors (the "cold email")</h2>
+        <p>In many lab sciences and some social sciences, emailing faculty before you apply helps a lot: you learn whether they're taking students, and they remember your name when applications arrive. In other fields it's uncommon, so ask a mentor what's normal in yours. Faculty get many of these emails. A short, specific one stands out; a generic one gets skipped.</p>
 
-Dear Professor [Name],
+        <div class="callout"><p><b>From someone who reads hundreds of them.</b> Melissa Hart, a graduate director who has received about 700 of these emails, describes what makes one work in <a href="https://www.nature.com/articles/d41586-023-00786-8" target="_blank" rel="noopener">“How to cold e-mail for a PhD”</a> (<i>Nature</i>, 20 March 2023). Her advice is summarized below, adapted for undergraduates.</p></div>
 
-I'm a senior at the University of Georgia studying [major]. I'm applying to
-[Program] for Fall [year] and was excited by your recent work on [specific
-paper or project], especially [one specific point].
+        <h3>The greeting</h3>
+        <ul>
+          <li><b>Never write "Dear Sir" or "Dear Madam."</b> Don't guess anyone's gender. Use their name: <i>"Dear Dr. Lee"</i> or <i>"Dear Professor Lee."</i></li>
+          <li><b>Check their title</b> on their department page. Some countries reserve "Professor" for full professors. "Dr." is always safe for someone with a PhD.</li>
+          <li><b>Watch how they sign off.</b> If they reply as "Sam," you can use "Sam" in your next email.</li>
+        </ul>
 
-In [lab/project], I [one or two sentences on your relevant experience].
-I'd love to explore [related question] in graduate school.
+        <h3>The body: short, specific, about the fit</h3>
+        <ul>
+          <li><b>Open with where you are now</b>, in one line: <i>"I'm a senior at the University of Georgia majoring in Genetics."</i></li>
+          <li><b>Don't summarize your whole CV.</b> Pick the one or two experiences that connect to <i>their</i> research.</li>
+          <li><b>Be precise about their work.</b> "You are an expert in climate science" says nothing; thousands of people are. Name the paper or project, and say what <i>specifically</i> interested you and why.</li>
+          <li><b>Show you actually read it.</b> Pasting in a paper title isn't enough. Mention a method, a finding, or a question it raised for you.</li>
+          <li><b>Name your relevant skills.</b> Programming, a lab technique, fieldwork, statistics: whatever their group uses.</li>
+          <li><b>Ask one clear question</b>: are they taking new students for your start year?</li>
+          <li><b>Write a new email for each person.</b> Never send the same email to a list of faculty. They can tell.</li>
+        </ul>
 
-Are you planning to take new students for [year]? I've attached my CV.
+        <h3>Attachments</h3>
+        <ul>
+          <li><b>Your CV and transcript as PDFs.</b> An unofficial UGA transcript is fine at this stage.</li>
+          <li><b>Your CV should list</b> education, research experience (including independent projects or an honors thesis), relevant jobs, any posters or publications, and contact details for references.</li>
+          <li><b>Emailing a program abroad?</b> Grading scales differ by country, so a short note on UGA's 4.0 GPA scale helps them read your grades.</li>
+          <li>Name your files clearly, e.g. <code>Lastname_CV.pdf</code>.</li>
+        </ul>
 
-Thank you for your time,
-[Name]</pre>
-        <p>No reply after two weeks? One polite follow-up is fine. Silence isn't a rejection; faculty get a lot of email.</p>
+        <h3>Template</h3>
+<pre class="template">Subject: Prospective PhD student for Fall [year] – [specific topic]
+
+Dear Dr. [Last name],
+
+I'm a [senior] at the University of Georgia majoring in [major]. I read your
+[year] paper on [specific topic] with great interest, especially [the specific
+method, finding, or question that caught your attention].
+
+For the past [time], I've worked in [lab / project] under [supervisor], where I
+[one or two sentences: what you did and what you found]. Along the way I
+built skills in [skill relevant to their group, e.g., Python, CRISPR, field
+sampling].
+
+I'm applying to PhD programs for Fall [year] and hope to study [a related
+question you'd like to explore]. Are you planning to take new students for
+that year? My CV and unofficial transcript are attached.
+
+Thank you for your time. I'd welcome the chance to talk about your group's work.
+
+Best regards,
+[Full name]
+[Major], University of Georgia · [email]</pre>
+
+        <h3>Build your email</h3>
+        <p class="hint" style="margin-bottom:14px">Fill in the blanks and your draft updates as you type. Nothing you enter leaves this page.</p>
+        <div class="card email-builder" id="email-builder">
+          <div class="row">
+            <fieldset><label class="lbl" for="eb-title">Their name</label><div class="row" style="grid-template-columns:110px 1fr;gap:8px"><select id="eb-title"><option>Dr.</option><option>Professor</option></select><input id="eb-last" type="text" placeholder="Last name"></div></fieldset>
+            <fieldset><label class="lbl" for="eb-email">Their email (optional)</label><input id="eb-email" type="email" placeholder="name@university.edu"></fieldset>
+          </div>
+          <div class="row">
+            <fieldset><label class="lbl" for="eb-year">You are a…</label><select id="eb-year"><option>senior</option><option>junior</option><option>recent graduate</option><option>master's student</option></select></fieldset>
+            <fieldset><label class="lbl" for="eb-major">Major</label><input id="eb-major" type="text" placeholder="e.g., Genetics"></fieldset>
+            <fieldset><label class="lbl" for="eb-start">Start year</label><input id="eb-start" type="text" placeholder="e.g., 2027"></fieldset>
+          </div>
+          <fieldset><label class="lbl" for="eb-paper">Their paper or project</label><input id="eb-paper" type="text" placeholder="e.g., your 2025 paper on drought tolerance in sorghum"></fieldset>
+          <fieldset><label class="lbl" for="eb-specific">What specifically interested you, and why</label><input id="eb-specific" type="text" placeholder="e.g., using root imaging to track gene expression over time"></fieldset>
+          <fieldset><label class="lbl" for="eb-exp">Your most relevant experience</label><textarea id="eb-exp" style="min-height:70px" placeholder="e.g., For the past year I've worked in Dr. Patel's lab, where I genotyped 200 sorghum lines and helped analyze the results in R."></textarea></fieldset>
+          <div class="row">
+            <fieldset><label class="lbl" for="eb-skills">Skills they'd care about</label><input id="eb-skills" type="text" placeholder="e.g., R, PCR, field sampling"></fieldset>
+            <fieldset><label class="lbl" for="eb-question">A question you'd like to study</label><input id="eb-question" type="text" placeholder="e.g., how root traits shape drought response"></fieldset>
+          </div>
+          <fieldset><label class="lbl" for="eb-name">Your full name</label><input id="eb-name" type="text"></fieldset>
+          <div class="eb-checks" id="eb-checks" aria-live="polite"></div>
+          <pre class="template" id="eb-out"></pre>
+          <div class="tools">
+            <button type="button" class="btn btn-primary btn-small" id="eb-copy">Copy email</button>
+            <a class="btn btn-ghost btn-small" id="eb-mail" href="#">Open in my email app</a>
+            <a class="btn btn-ghost btn-small" href="/help.html">Ask a grad student to review it</a>
+          </div>
+        </div>
+
+        <h3>Follow-up and timing</h3>
+        <ul>
+          <li><b>Send it in late summer or early fall</b> (August–October), before faculty are buried in applications.</li>
+          <li><b>No reply after two weeks?</b> Send one polite follow-up, replying to your first email so they have the context. Then let it go. Silence isn't a rejection.</li>
+          <li><b>Got a reply?</b> Answer within a day or two and say yes to a short call if they offer one. Prepare two or three questions about the lab.</li>
+        </ul>
+        <div class="callout"><p><b>Before you hit send:</b> ✓ their name is spelled right ✓ the title is correct ✓ you mention one specific piece of their work ✓ your email is under 200 words ✓ the CV and transcript PDFs are attached ✓ you sent it from your UGA address. A ScholarLink mentor in your field will gladly read your draft first. <a href="/help.html">Request help</a>.</p></div>
       </section>
 
       <section id="components">
@@ -246,6 +319,47 @@ const spy = new IntersectionObserver((entries) => entries.forEach((en) => {
   tocLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id))
 }), { rootMargin: "-30% 0px -60% 0px" })
 $$(".guide article section[id]").forEach((s) => spy.observe(s))
+
+// Cold email builder: fills the template as you type and flags common mistakes.
+const eb = (id) => document.getElementById("eb-" + id)
+function buildEmail() {
+  const v = (id, ph) => eb(id).value.trim() || ph
+  const to = `${eb("title").value} ${v("last", "[Last name]")}`
+  const subject = `Prospective PhD student for Fall ${v("start", "[year]")}${eb("question").value.trim() ? " – " + eb("question").value.trim() : ""}`
+  const body = `Dear ${to},
+
+I'm a ${eb("year").value} at the University of Georgia majoring in ${v("major", "[major]")}. I read ${v("paper", "[your paper or project]")} with great interest, especially ${v("specific", "[what specifically interested you]")}.
+
+${v("exp", "[Your most relevant experience: what you did and what you found.]")}${eb("skills").value.trim() ? ` Along the way I built skills in ${eb("skills").value.trim()}.` : ""}
+
+I'm applying to PhD programs for Fall ${v("start", "[year]")} and hope to study ${v("question", "[a question you'd like to explore]")}. Are you planning to take new students for that year? My CV and unofficial transcript are attached.
+
+Thank you for your time. I'd welcome the chance to talk about your group's work.
+
+Best regards,
+${v("name", "[Full name]")}
+${v("major", "[Major]")}, University of Georgia`
+  eb("out").textContent = `Subject: ${subject}\n\n${body}`
+  eb("mail").href = `mailto:${encodeURIComponent(eb("email").value.trim())}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
+  const words = body.split(/\s+/).filter(Boolean).length
+  const all = $$("#email-builder input, #email-builder textarea").map((e) => e.value).join(" ").toLowerCase()
+  const checks = [
+    [!/dear (sir|madam)/.test(all), "No “Dear Sir/Madam”"],
+    [!!eb("last").value.trim(), "Addressed by name"],
+    [eb("paper").value.trim().length > 12 && !/expert in/.test(all), "Mentions specific work, not just “an expert in…”"],
+    [eb("specific").value.trim().length > 12, "Says what interested you and why"],
+    [!!eb("skills").value.trim(), "Names relevant skills"],
+    [words <= 220, `Short: ${words} words${words > 220 ? " (aim for under 200)" : ""}`],
+  ]
+  eb("checks").innerHTML = checks.map(([ok, t]) => `<span class="${ok ? "ok" : ""}">${ok ? "✓" : "○"} ${esc(t)}</span>`).join("")
+}
+$("#email-builder").addEventListener("input", buildEmail)
+$("#email-builder").addEventListener("change", buildEmail)
+eb("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText(eb("out").textContent); toast("Email copied ✓") } catch { toast("Select the text and copy it") }
+}
+buildEmail()
 </script>
 </body>
 </html>
