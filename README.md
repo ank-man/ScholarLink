@@ -17,6 +17,8 @@ and a departmental **GSA Mentor Lead** oversees matches in each pilot department
 | `/guide.html` | Grad school application guide: timeline, documents, statement of purpose, letters, funding, checklist |
 | `/status.html` | Each person's private page (secret link): see their match and contact info, track progress, log meetings, rate, close help requests |
 | `/cards.html` | Name Card Studio: mentor, mentee, and match cards in 6 themes and 3 sizes (badge, square, story). Download PNG, copy, share, or print a badge sheet. Runs entirely in the browser |
+| `/cv.html` | CV Maker: academic CV builder with 3 templates, live preview, page count, PDF (print) and Word export, plain-text copy, backup/restore. Drafts stay in the browser |
+| `/funding.html` | Funding Finder: searchable archive of fellowships, grants, and scholarships by major, stage, and citizenship, plus Funding 101 and a guide for international students. Data lives in `public/funding-data.js` (review it each fall) |
 | `/tap.html` | ScholarTap digital card: a phone-friendly profile opened from a link or QR code, with "Save contact". The details live in the link itself (after `#`), never on the server |
 
 ### How matching works

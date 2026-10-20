@@ -48,8 +48,12 @@ const NAV = [
   ["mentee", "/mentee.html", "Find a mentor"],
   ["mentor", "/mentor.html", "Become a mentor"],
   ["help", "/help.html", "Application help"],
-  ["guide", "/guide.html", "Grad school guide"],
-  ["cards", "/cards.html", "Name cards", "new"],
+]
+const TOOLS = [
+  ["guide", "/guide.html", "Grad school guide", "🧭", "Timeline, cold emails, checklist"],
+  ["funding", "/funding.html", "Funding finder", "💰", "Fellowships and grants by field", "new"],
+  ["cv", "/cv.html", "CV maker", "📄", "Academic CV in minutes", "new"],
+  ["cards", "/cards.html", "Name cards", "🪪", "Cards and ScholarTap"],
 ]
 const ICONS = {
   menu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>`,
@@ -60,18 +64,30 @@ const ICONS = {
 function renderHeader(page) {
   const head = $(".site-head")
   if (!head) return
-  const links = NAV.map(([key, href, label, cls]) =>
-    `<a href="${href}"${key === page ? ` aria-current="page"` : ""}${cls && key !== page ? ` class="${cls}"` : ""}>${label}</a>`).join("")
+  const links = NAV.map(([key, href, label]) => `<a href="${href}"${key === page ? ` aria-current="page"` : ""}>${label}</a>`).join("")
+  const inTools = TOOLS.some(([key]) => key === page)
+  const tools = `<div class="nav-drop"><button type="button" class="nav-drop-btn${inTools ? " current" : ""}" aria-expanded="false">Tools <span aria-hidden="true">▾</span></button>
+    <div class="nav-menu">${TOOLS.map(([key, href, label, icon, desc, cls]) =>
+      `<a href="${href}"${key === page ? ` aria-current="page"` : ""}><span class="ni">${icon}</span><span><b>${label}${cls && key !== page ? ` <i class="pill-new">New</i>` : ""}</b><small>${desc}</small></span></a>`).join("")}</div></div>`
   const mine = store.get()[0]
   head.innerHTML = `<div class="wrap">
     <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>${PROGRAM.initiative} · ${PROGRAM.org}</small></span></a>
-    <nav class="nav" id="nav">${links}${mine ? `<a class="mine" href="${esc(mine.url)}">My page</a>` : ""}</nav>
+    <nav class="nav" id="nav">${links}${tools}${mine ? `<a class="mine" href="${esc(mine.url)}">My page</a>` : ""}</nav>
     <button class="icon-btn theme-toggle" type="button" aria-label="Switch light or dark mode">${ICONS.sun}${ICONS.moon}</button>
     <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav">${ICONS.menu}</button>
   </div>`
   if (!$(".ambient")) document.body.insertAdjacentHTML("afterbegin", `<div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>`)
   $(".theme-toggle", head).onclick = theme.toggle
   const toggle = $(".nav-toggle", head)
+  const drop = $(".nav-drop-btn", head)
+  drop.onclick = (e) => {
+    e.stopPropagation()
+    const open = drop.parentElement.classList.toggle("open")
+    drop.setAttribute("aria-expanded", open)
+  }
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".nav-drop")) { drop.parentElement.classList.remove("open"); drop.setAttribute("aria-expanded", "false") }
+  })
   toggle.onclick = () => {
     const open = $("#nav").classList.toggle("open")
     toggle.setAttribute("aria-expanded", open)
@@ -82,7 +98,7 @@ function renderFooter() {
   const f = $("footer.site-foot")
   if (!f || f.childElementCount) return
   f.innerHTML = `<div class="wrap"><span>ScholarLink is a <b>${PROGRAM.initiative}</b> initiative from the ${PROGRAM.orgLong} (GSA). Student-run; not an official University of Georgia website.</span>
-    <span class="foot-links"><a href="/guide.html">Grad school guide</a><a href="/cards.html">Name cards</a><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></span></div>`
+    <span class="foot-links"><a href="/guide.html">Grad school guide</a><a href="/funding.html">Funding finder</a><a href="/cv.html">CV maker</a><a href="/cards.html">Name cards</a><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></span></div>`
 }
 
 // ---------- api ----------

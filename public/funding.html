@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Funding Finder · ScholarLink</title>
+<meta name="description" content="Search graduate fellowships, grants, and scholarships by major, career stage, and citizenship, plus a funding guide for international students.">
+<meta name="theme-color" content="#ba0c2f">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<script src="/app.js"></script>
+<script src="/funding-data.js"></script>
+</head>
+<body>
+<header class="site-head"></header><script>renderHeader("funding")</script>
+
+<main class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Funding Finder</p>
+    <h1>Pay for grad school <span class="grad">without the guesswork</span></h1>
+    <p class="lede">Fellowships, grants, and scholarships for graduate students, searchable by your major, where you are in school, and your citizenship status. Plus a guide for international students.</p>
+    <div class="fund-jump">
+      <a href="#finder" class="btn btn-primary btn-small">🔎 Search funding</a>
+      <a href="#basics" class="btn btn-ghost btn-small">💡 Funding 101</a>
+      <a href="#international" class="btn btn-ghost btn-small">🌍 International students</a>
+    </div>
+  </div>
+
+  <section id="finder" style="padding-top:8px">
+    <div class="card fund-filters">
+      <div class="fund-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="q" placeholder="Type your major or a keyword: Genetics, Psychology, Marketing, AI…" aria-label="Search by major or keyword">
+      </div>
+      <div id="major-hint" class="fund-hint"></div>
+      <div class="fund-row">
+        <label class="fund-select"><span>I am a…</span><select id="who"><option value="">Any status</option><option value="us">US citizen</option><option value="pr">Permanent resident</option><option value="intl">International student (F-1/J-1)</option><option value="daca">DACA / undocumented</option></select></label>
+        <label class="fund-select"><span>Stage</span><select id="stage"><option value="">Any stage</option></select></label>
+        <label class="fund-select"><span>Field</span><select id="field"><option value="">All fields</option></select></label>
+        <label class="fund-select"><span>Sort</span><select id="sort"><option value="deadline">Deadline (soonest)</option><option value="name">Name (A–Z)</option></select></label>
+      </div>
+      <div class="fund-row" style="margin-top:12px">
+        <div class="choices" id="types"></div>
+        <span style="flex:1"></span>
+        <label class="inline-check"><input type="checkbox" id="uga"> UGA only</label>
+        <label class="inline-check"><input type="checkbox" id="saved"> ★ Saved only</label>
+      </div>
+    </div>
+
+    <div class="fund-bar"><b id="count"></b><button type="button" class="btn btn-ghost btn-small" id="reset">Reset filters</button></div>
+    <div class="fund-grid" id="results"></div>
+
+    <div class="callout" style="margin-top:24px">
+      <p><b>Recently ended, so don't spend time on these:</b></p>
+      <ul id="ended" style="margin:6px 0 0;padding-left:18px"></ul>
+      <p class="hint" style="margin:10px 0 0">Last reviewed <span data-reviewed></span>. Deadlines marked <b>“typical”</b> are when a program has usually closed; ones marked <b>✓</b> are confirmed for the current cycle. Rules change every year, so always check the official page. Know of one we're missing? Tell your department's GSA Mentor Lead.</p>
+    </div>
+  </section>
+
+  <section id="basics">
+    <div class="section-head"><h2>Funding 101</h2><p>How graduate school actually gets paid for, in plain language.</p></div>
+    <div class="bento">
+      <div class="card half reveal"><div class="icon">🏛️</div><h3>Funded PhDs are the norm</h3><p>In most research PhD programs, especially in the sciences, admitted students get a <b>tuition waiver and a stipend</b>, usually through an assistantship. If a PhD program asks you to pay full tuition yourself, ask why before accepting.</p></div>
+      <div class="card half reveal"><div class="icon">🧑‍🏫</div><h3>Assistantships</h3><p>You teach (TA) or do research (RA) about 20 hours a week. In return you get a stipend, tuition waiver, and often help with health insurance. This is how most grad students, including international students, are funded.</p></div>
+      <div class="card reveal"><div class="icon">🏅</div><h3>Fellowships</h3><p>Money with no work duties, so you can focus on research. Competitive and prestigious. Many outside fellowships (NSF, Hertz) go with you to any school.</p></div>
+      <div class="card reveal"><div class="icon">🔬</div><h3>Research grants</h3><p>Smaller awards for a specific cost: fieldwork, travel, equipment, or a summer at a national lab. Great for building your CV.</p></div>
+      <div class="card reveal"><div class="icon">🎓</div><h3>Master's & professional</h3><p>Usually self-funded through savings, loans, and scholarships, though some master's programs offer assistantships. Ask every program what share of students receive aid.</p></div>
+    </div>
+    <div class="card reveal" style="margin-top:16px">
+      <h3>Tips that make a difference</h3>
+      <ul class="check" style="margin:0">
+        <li>📅&nbsp; <b>Start 12 months ahead.</b> Most big fellowships close in the fall, a year before you'd start (the NSF GRFP closes in October).</li>
+        <li>🏫&nbsp; <b>Watch for campus deadlines.</b> Rhodes, Marshall, Churchill, and Fulbright need UGA's endorsement first, with an earlier internal deadline. Talk to UGA's major fellowships advisors early.</li>
+        <li>🔁&nbsp; <b>Apply more than once.</b> You can often apply as a senior and again in early grad school. Reviewers' feedback makes the second try stronger.</li>
+        <li>🧾&nbsp; <b>Stipends are taxable income</b> in the US. Set money aside, because fellowships often don't withhold taxes.</li>
+        <li>🤝&nbsp; <b>Ask a mentor to read your essays.</b> A grad student who won the same fellowship is the best reviewer you can get. <a href="/help.html">Request help</a>.</li>
+        <li>📄&nbsp; <b>Get your CV ready.</b> Almost every application asks for one. <a href="/cv.html">Build it with the CV maker</a>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="international">
+    <div class="section-head"><h2>🌍 Guide for international students</h2><p>Funding works differently when you're not a US citizen or permanent resident. Here's what to know.</p></div>
+    <div class="bento">
+      <div class="card half reveal">
+        <h3>Where your funding will come from</h3>
+        <ul class="intl-list">
+          <li><b>Your program, first.</b> Teaching and research assistantships are open to international students and are the main source of PhD funding. Ask each program: <i>"Do admitted international PhD students receive the same funding package?"</i></li>
+          <li><b>Your advisor's grants.</b> Research assistantships are often paid from faculty grants. Contacting faculty before you apply helps (see our <a href="/guide.html#faculty">cold email guide</a>).</li>
+          <li><b>Programs from your home country.</b> Fulbright Foreign Student, government scholarships, and national foundations often fund study in the US.</li>
+          <li><b>Outside awards open to everyone.</b> Knight-Hennessy, Gates Cambridge, AAUW International, P.E.O., Wenner-Gren, and others below.</li>
+        </ul>
+        <button type="button" class="btn btn-primary btn-small" id="show-intl">Show funding open to international students</button>
+      </div>
+      <div class="card half reveal">
+        <h3>What to watch out for</h3>
+        <ul class="intl-list">
+          <li><b>Many US fellowships require citizenship or permanent residency</b>, including NSF GRFP, NDSEG, NIH F31, Hertz, and DOE CSGF. Don't spend time on them unless your status changes.</li>
+          <li><b>Proof of funding:</b> to get your I-20, you'll need to show you can cover the first year. An assistantship offer letter usually counts.</li>
+          <li><b>Work limits:</b> on an F-1 visa, on-campus work is generally limited to 20 hours a week during the semester. Off-campus work needs authorization (CPT or OPT) first.</li>
+          <li><b>Taxes:</b> stipends are usually taxable. Your home country may have a tax treaty with the US, and you must file Form 8843 every year, even with no income.</li>
+          <li><b>Health insurance</b> is required. Check what your assistantship covers.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card reveal" style="margin-top:16px">
+      <h3>Get help at UGA</h3>
+      <p>UGA's <a href="https://globalengagement.uga.edu" target="_blank" rel="noopener">Office of Global Engagement</a> handles international student immigration questions: I-20s, work authorization, and travel. Your graduate coordinator knows your program's funding. A ScholarLink mentor who was an international applicant can share what worked for them; <a href="/mentee.html">find a mentor</a>.</p>
+      <p class="hint" style="margin:8px 0 0">This guide is general information, not immigration or tax advice. Rules change, so confirm anything about your visa with the Office of Global Engagement.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"></footer>
+<script>
+const SAVE_KEY = "scholarlink-funding-saved"
+let saved = new Set()
+try { saved = new Set(JSON.parse(localStorage.getItem(SAVE_KEY) || "[]")) } catch {}
+const persist = () => { try { localStorage.setItem(SAVE_KEY, JSON.stringify([...saved])) } catch {} }
+const MONTHS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+const TYPE_ICON = { fellowship: "🏅", grant: "🔬", scholarship: "🎓", assistantship: "🧑‍🏫" }
+
+$("#stage").insertAdjacentHTML("beforeend", Object.entries(STAGES).map(([k, v]) => `<option value="${k}">${v}</option>`).join(""))
+$("#field").insertAdjacentHTML("beforeend", Object.entries(FIELDS).map(([k, v]) => `<option value="${k}">${v}</option>`).join(""))
+$("#types").innerHTML = Object.entries(TYPES).map(([k, v]) => `<label class="choice"><input type="checkbox" name="type" value="${k}"><span>${TYPE_ICON[k]} ${v}</span></label>`).join("")
+$$("[data-reviewed]").forEach((e) => (e.textContent = FUNDING_REVIEWED))
+$("#ended").innerHTML = ENDED.map((e) => `<li><a href="${e.url}" target="_blank" rel="noopener">${esc(e.name)}</a>: ${esc(e.note)}</li>`).join("")
+
+// Turn a typed major into fields, e.g. "genetics" → life sciences.
+function fieldsForQuery(q) {
+  const t = " " + q.toLowerCase() + " "
+  return Object.entries(MAJOR_MAP).filter(([, words]) => words.some((w) => t.includes(w))).map(([k]) => k)
+}
+
+function state() {
+  return { q: $("#q").value.trim(), who: $("#who").value, stage: $("#stage").value, field: $("#field").value, sort: $("#sort").value,
+    types: $$("input[name=type]:checked").map((i) => i.value), uga: $("#uga").checked, saved: $("#saved").checked }
+}
+
+function render() {
+  const s = state()
+  const qFields = s.q ? fieldsForQuery(s.q) : []
+  const words = s.q.toLowerCase().split(/\s+/).filter(Boolean)
+  $("#major-hint").innerHTML = qFields.length
+    ? `Matching <b>${esc(s.q)}</b> to: ${qFields.map((f) => `<span class="tag">${esc(FIELDS[f])}</span>`).join(" ")} plus awards open to any field.`
+    : s.q ? `Searching names and descriptions for “${esc(s.q)}”.` : ""
+
+  const cur = new Date().getMonth() + 1
+  let list = FUNDING.filter((f) => {
+    if (s.who && !f.who.includes(s.who)) return false
+    if (s.stage && !f.stages.includes(s.stage)) return false
+    if (s.field && !(f.fields.includes(s.field) || f.fields.includes("any"))) return false
+    if (s.types.length && !s.types.includes(f.type)) return false
+    if (s.uga && !f.uga) return false
+    if (s.saved && !saved.has(f.id)) return false
+    if (s.q) {
+      const text = `${f.name} ${f.sponsor} ${f.summary}`.toLowerCase()
+      const byField = qFields.length && (f.fields.includes("any") || f.fields.some((x) => qFields.includes(x)))
+      const byText = words.every((w) => text.includes(w))
+      if (!byField && !byText) return false
+    }
+    return true
+  })
+  const soon = (f) => (f.month ? (f.month - cur + 12) % 12 : 99)
+  // Field-specific matches first when searching by major, then by deadline or name.
+  const specific = (f) => (qFields.length && !f.fields.includes("any") ? 0 : 1)
+  list.sort((a, b) => specific(a) - specific(b) || (s.sort === "name" ? a.name.localeCompare(b.name) : soon(a) - soon(b) || a.name.localeCompare(b.name)))
+
+  $("#count").textContent = `${list.length} ${list.length === 1 ? "opportunity" : "opportunities"}`
+  $("#results").innerHTML = list.length ? list.map((f) => `<article class="fund-card${f.uga ? " uga" : ""}">
+      <div class="fund-top"><span class="fund-type">${TYPE_ICON[f.type]} ${TYPES[f.type]}</span>${f.uga ? `<span class="tag">UGA</span>` : ""}
+        <button type="button" class="fund-star${saved.has(f.id) ? " on" : ""}" data-save="${f.id}" aria-label="${saved.has(f.id) ? "Remove from saved" : "Save"}" aria-pressed="${saved.has(f.id)}">★</button></div>
+      <h3>${esc(f.name)}</h3><div class="fund-sponsor">${esc(f.sponsor)}</div>
+      <p>${esc(f.summary)}</p>
+      <dl><dt>💵</dt><dd>${esc(f.amount)}</dd><dt>📅</dt><dd>${esc(f.deadline)} ${f.verified ? `<span class="badge ok">✓ 2026</span>` : f.month ? `<span class="badge">typical</span>` : ""}</dd></dl>
+      <div class="tags">${f.who.map((w) => `<span class="tag who">${esc(WHO[w])}</span>`).join("")}</div>
+      <div class="tags" style="margin-top:6px">${(f.fields.includes("any") ? ["Any field"] : f.fields.map((x) => FIELDS[x])).map((x) => `<span class="tag field">${esc(x)}</span>`).join("")}</div>
+      <a class="btn btn-ghost btn-small fund-link" href="${f.url}" target="_blank" rel="noopener">Official site ↗</a>
+    </article>`).join("")
+    : `<div class="card" style="grid-column:1/-1;text-align:center"><h3>No matches</h3><p>Try a broader field or a different stage. Your graduate program's own assistantships are always worth asking about.</p></div>`
+
+  const p = new URLSearchParams()
+  for (const k of ["q", "who", "stage", "field"]) if (s[k]) p.set(k, s[k])
+  history.replaceState(null, "", location.pathname + (p.toString() ? "?" + p : "") + location.hash)
+}
+
+const params = new URLSearchParams(location.search)
+for (const k of ["q", "who", "stage", "field"]) if (params.get(k)) $("#" + k).value = params.get(k)
+
+$("#finder").addEventListener("input", render)
+$("#finder").addEventListener("change", render)
+$("#results").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-save]")
+  if (!b) return
+  const id = b.dataset.save
+  saved.has(id) ? saved.delete(id) : saved.add(id)
+  persist(); render()
+  toast(saved.has(id) ? "Saved ★" : "Removed from saved")
+})
+$("#reset").onclick = () => {
+  for (const id of ["q", "who", "stage", "field"]) $("#" + id).value = ""
+  $$("input[name=type]").forEach((i) => (i.checked = false)); $("#uga").checked = $("#saved").checked = false
+  render()
+}
+$("#show-intl").onclick = () => { $("#who").value = "intl"; render(); $("#finder").scrollIntoView({ behavior: "smooth" }) }
+render()
+</script>
+</body>
+</html>

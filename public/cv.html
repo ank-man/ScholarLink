@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CV Maker · ScholarLink</title>
+<meta name="description" content="Build an academic CV for grad school applications: pick a template, fill in your details, download a PDF or Word file.">
+<meta name="theme-color" content="#ba0c2f">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/cv.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<script src="/app.js"></script>
+</head>
+<body>
+<header class="site-head"></header><script>renderHeader("cv")</script>
+
+<main class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">CV Maker</p>
+    <h1>Build your <span class="grad">academic CV</span></h1>
+    <p class="lede">Made for grad school applications: research, presentations, and references, not just jobs. Pick a template, fill in the blanks, and download a PDF. Your draft saves in this browser automatically.</p>
+    <div class="actions" style="margin-top:18px">
+      <button type="button" class="btn btn-ghost btn-small" id="cv-example">✨ Start from an example</button>
+      <button type="button" class="btn btn-ghost btn-small" id="cv-clear">Clear</button>
+    </div>
+  </div>
+
+  <div class="cv-layout">
+    <form id="cv-form" class="cv-editor" autocomplete="off">
+      <div class="card cv-block">
+        <h3>Template</h3>
+        <div class="cv-templates">
+          <label class="tpl"><input type="radio" name="cv-template" value="classic"><span><i class="tpl-classic"></i><b>Classic</b><small>Traditional academic</small></span></label>
+          <label class="tpl"><input type="radio" name="cv-template" value="modern"><span><i class="tpl-modern"></i><b>Modern</b><small>Clean with color</small></span></label>
+          <label class="tpl"><input type="radio" name="cv-template" value="sidebar"><span><i class="tpl-sidebar"></i><b>Sidebar</b><small>Two columns</small></span></label>
+        </div>
+        <div class="cv-accent-row"><span class="hint" style="margin:0">Accent color</span><div id="cv-accents" class="dot-swatches"></div></div>
+      </div>
+
+      <div class="card cv-block">
+        <h3>Your details</h3>
+        <div class="cv-grid">
+          <label class="cv-field wide"><span>Full name</span><input type="text" data-h="name" placeholder="Jordan Mitchell"></label>
+          <label class="cv-field wide"><span>Headline (optional)</span><input type="text" data-h="headline" placeholder="Undergraduate Researcher · Genetics"></label>
+          <label class="cv-field"><span>Email</span><input type="text" data-h="email" placeholder="you@uga.edu"></label>
+          <label class="cv-field"><span>Phone</span><input type="text" data-h="phone" placeholder="(706) 555-0100"></label>
+          <label class="cv-field"><span>Location</span><input type="text" data-h="location" placeholder="Athens, GA"></label>
+          <label class="cv-field"><span>Links (comma-separated)</span><input type="text" data-h="links" placeholder="linkedin.com/in/you, github.com/you"></label>
+        </div>
+      </div>
+
+      <div id="cv-sections"></div>
+
+      <div class="card cv-block cv-tips">
+        <h3>💡 What makes an academic CV strong</h3>
+        <ul>
+          <li><b>Lead with research.</b> For grad school, research experience matters more than jobs. Put it right after education.</li>
+          <li><b>Start bullets with a verb and add a number:</b> "Analyzed 24 RNA-seq samples…", "Mentored 30 students…".</li>
+          <li><b>Say what came of it</b>: a poster, a dataset, a thesis, a skill you can use in their lab.</li>
+          <li><b>Newest first</b> in every section, with the same date format everywhere.</li>
+          <li><b>One to two pages</b> is right for an undergrad. No photo, age, or GPA under 3.0 on US applications.</li>
+          <li><b>Posters count.</b> List symposium posters and talks under Presentations, with your name in bold.</li>
+          <li><b>Ask your references first</b>, and give them your CV and statement when you do.</li>
+        </ul>
+        <p class="hint" style="margin:10px 0 0">Want a second pair of eyes? <a href="/help.html">Ask a grad student</a> to review your CV.</p>
+      </div>
+    </form>
+
+    <div class="cv-preview">
+      <div class="cv-toolbar">
+        <div class="cv-meter" id="cv-meter"><div class="meter"><span style="width:0"></span></div><small id="cv-meter-text"></small></div>
+        <span class="badge" id="page-count">1 page</span>
+      </div>
+      <div id="paper-box" class="paper-box"><div id="paper" class="paper classic"></div></div>
+      <div class="stage-actions">
+        <button type="button" class="btn btn-primary" id="cv-pdf">⬇ Download PDF</button>
+        <button type="button" class="btn btn-ghost" id="cv-word">Word (.doc)</button>
+        <button type="button" class="btn btn-ghost" id="cv-text">Copy as plain text</button>
+      </div>
+      <div class="stage-actions" style="margin-top:8px">
+        <button type="button" class="btn btn-ghost btn-small" id="cv-backup">Save backup file</button>
+        <label class="btn btn-ghost btn-small">Restore backup<input type="file" id="cv-restore" accept="application/json,.json" hidden></label>
+      </div>
+      <p class="hint" style="text-align:center;margin-top:10px">PDF: in the print window, choose <b>Save as PDF</b> and turn off headers and footers.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-foot"></footer>
+<script src="/cv.js"></script>
+<script>initCV()</script>
+</body>
+</html>

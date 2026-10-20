@@ -1,0 +1,54 @@
+/* CV paper styles. Shared by the on-screen preview, printing, and the Word export. */
+.paper {
+  --accent: #ba0c2f;
+  width: 8.5in; min-height: 11in; padding: .6in .7in; background: #fff; color: #1a1a1a;
+  font: 10.5pt/1.45 "Source Serif 4", Georgia, "Times New Roman", serif; box-sizing: border-box;
+}
+.paper * { box-sizing: border-box; }
+.paper section { padding: 0; margin: 0; }
+.paper h1 { font: 600 24pt/1.1 "Source Serif 4", Georgia, serif; margin: 0 0 4pt; letter-spacing: -.01em; color: #111; }
+.paper .headline { font-size: 11pt; color: #444; margin: 0 0 6pt; }
+.paper .contact { font-size: 9.5pt; color: #333; margin: 0; }
+.paper .contact span + span::before { content: "  ·  "; color: #999; white-space: pre; }
+.paper .contact a { color: inherit; text-decoration: none; }
+.paper h2 { font: 700 10pt/1.2 "Inter", Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; margin: 16pt 0 6pt; padding-bottom: 3pt; border-bottom: 1px solid #222; color: #111; }
+.paper .entry { margin: 0 0 7pt; break-inside: avoid; page-break-inside: avoid; }
+.paper .line { display: flex; justify-content: space-between; gap: 12pt; }
+.paper .line .r { white-space: nowrap; text-align: right; flex: none; }
+.paper .t { font-weight: 700; }
+.paper .o { font-style: italic; }
+.paper ul { margin: 2pt 0 0; padding-left: 14pt; }
+.paper li { margin: 1pt 0; }
+.paper p { margin: 0 0 4pt; }
+.paper ol.cites { margin: 0; padding-left: 18pt; }
+.paper ol.cites li { margin: 0 0 4pt; padding-left: 2pt; }
+.paper .skills div { margin: 0 0 2pt; }
+.paper .refs { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt 20pt; }
+.paper .refs div { font-size: 9.5pt; line-height: 1.35; }
+.paper .empty { color: #aaa; font-style: italic; }
+
+/* Classic: centered, serif, black rules */
+.paper.classic header { text-align: center; margin-bottom: 4pt; }
+.paper.classic h2 { font-family: "Source Serif 4", Georgia, serif; font-size: 11pt; letter-spacing: .14em; font-weight: 600; }
+
+/* Modern: sans-serif with an accent color */
+.paper.modern { font-family: "Inter", Arial, sans-serif; font-size: 9.8pt; }
+.paper.modern h1 { font-family: "Inter", Arial, sans-serif; font-weight: 800; font-size: 23pt; color: var(--accent); letter-spacing: -.02em; }
+.paper.modern header { border-left: 4pt solid var(--accent); padding-left: 12pt; margin-bottom: 4pt; }
+.paper.modern h2 { color: var(--accent); border-bottom: 1.5pt solid var(--accent); }
+
+/* Sidebar: two columns with a tinted side panel */
+.paper.sidebar { padding: 0; display: grid; grid-template-columns: 2.35in 1fr; font-family: "Inter", Arial, sans-serif; font-size: 9.6pt; }
+.paper.sidebar aside { background: color-mix(in srgb, var(--accent) 9%, #fff); padding: .6in .25in .6in .35in; border-right: 3pt solid var(--accent); }
+.paper.sidebar main { padding: .6in .5in .6in .35in; min-width: 0; }
+.paper.sidebar h1 { font-family: "Inter", Arial, sans-serif; font-weight: 800; font-size: 21pt; color: var(--accent); }
+.paper.sidebar h2 { color: var(--accent); border-bottom-color: var(--accent); }
+.paper.sidebar aside h2 { font-size: 8.8pt; }
+.paper.sidebar aside .contact span { display: block; overflow-wrap: anywhere; margin-bottom: 3pt; }
+.paper.sidebar aside .contact span + span::before { content: none; }
+.paper.sidebar aside .line { display: block; }
+.paper.sidebar aside .line .r { display: block; text-align: left; color: #555; }
+.paper.sidebar aside .refs { grid-template-columns: 1fr; }
+.paper.sidebar aside .skills div { margin-bottom: 5pt; }
+.paper.sidebar aside .skills b { display: block; }
+.paper { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
