@@ -64,7 +64,7 @@ export default async (req: Request) => {
   } catch (e) {
     if (e instanceof HttpError) return json({ error: e.message }, e.status)
     console.error(e)
-    return json({ error: "Something went wrong saving your response. Please try again in a minute." }, 500)
+    return json({ error: "Something went wrong on our end. Please try again in a minute." }, 500)
   }
 }
 
