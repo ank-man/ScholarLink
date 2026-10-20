@@ -1,0 +1,27 @@
+{
+  "programName": "ScholarLink",
+  "allowedEmailDomains": ["uga.edu"],
+  "departments": [
+    { "name": "Computer Science", "lead": "", "leadEmail": "" },
+    { "name": "Psychology", "lead": "", "leadEmail": "" },
+    { "name": "Genetics", "lead": "", "leadEmail": "" },
+    { "name": "Marketing", "lead": "", "leadEmail": "" }
+  ],
+  "years": ["Freshman", "Sophomore", "Junior", "Senior"],
+  "programs": ["Master's", "PhD", "Professional"],
+  "careers": [
+    "Graduate school (PhD)", "Graduate school (Master's)", "Medical / Professional school",
+    "Industry R&D", "Industry (non-research)", "Government / Public sector",
+    "Nonprofit", "Entrepreneurship", "Undecided"
+  ],
+  "availability": ["Weekday mornings", "Weekday afternoons", "Weekday evenings", "Weekends"],
+  "formats": ["In person", "Virtual", "Either"],
+  "maxMenteesOptions": [1, 2, 3],
+  "applicationTypes": ["PhD", "Master's", "Professional school (MD, JD, etc.)", "Not sure yet"],
+  "helpTopics": [
+    "Choosing programs", "Statement of purpose", "CV / resume", "Recommendation letters",
+    "Contacting faculty", "Funding & fee waivers", "Interviews", "Comparing offers"
+  ],
+  "maxOpenHelpPerMentor": 3,
+  "weights": { "department": 40, "keyword": 10, "career": 8, "availability": 5, "format": 5 }
+}

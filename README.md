@@ -1,32 +1,72 @@
 # ScholarLink
 
-**Part of Bulldog Bridge, an SGA × GSA collaboration at the University of Georgia.**
+**Part of Bulldog Bridge: graduate student mentors for undergraduates at the University of Georgia.**
 
-ScholarLink pairs undergraduate students with graduate student mentors in their field of interest.
-The pilot runs for 90 days in a few departments. Each mentor commits to just **two meetings over eight weeks**,
-and a departmental **GSA Mentor Lead** coordinates recruitment, matching, and introductions.
+ScholarLink pairs undergraduates with graduate student mentors in their field of interest, and connects
+students applying to grad school with volunteers who can help. Mentors commit to just **two meetings over eight weeks**,
+and a departmental **GSA Mentor Lead** oversees matches in each pilot department.
 
-## What's here
+## The web app
 
-| File | What it is |
+| Page | What it does |
 |---|---|
-| [`ScholarLink_Pilot.xlsx`](ScholarLink_Pilot.xlsx) | Matching and tracking workbook: registrations, mentor scoring, match log, and a pilot dashboard |
-| [`ScholarLink_Form_Questions.md`](ScholarLink_Form_Questions.md) | Mentee and mentor registration form questions, Mentor Lead workflow, and a sample intro email |
+| `/` | Overview, live program numbers, departments in the pilot |
+| `/mentee.html` | Students sign up and are **matched instantly** to the best-fit mentor with room in their chosen department |
+| `/mentor.html` | Grad students sign up; any waiting students are matched to them right away |
+| `/help.html` | Students request grad application help; a volunteer mentor is assigned automatically |
+| `/guide.html` | Grad school application guide: timeline, documents, statement of purpose, letters, funding, checklist |
+| `/status.html` | Each person's private page (secret link): see their match and contact info, log meetings, rate, close help requests |
 
-## How it works
+### How matching works
 
-1. Students register through two simple forms (Google Forms or Microsoft Forms).
-2. Responses are pasted into the workbook's **Mentees** and **Mentors** sheets.
-3. **Match Finder** scores every mentor for a chosen mentee on department, interest keywords, career goals,
-   availability, and meeting format, then suggests the top 3 mentors who still have room.
-4. Mentor Leads log pairings, meetings, and feedback on **Matches**.
-5. **Dashboard** reports participation, completed meetings, and ratings, both overall and per department.
+Each mentor in the student's chosen department who has an open spot is scored, and the highest score wins
+(ties go to whoever registered first):
 
-## Getting started
+- same department: +40
+- each interest keyword found in the mentor's research description: +10
+- each shared career path: +8
+- each shared availability window: +5
+- compatible meeting format: +5
 
-1. Download `ScholarLink_Pilot.xlsx` and open it in Excel (or upload it to Google Sheets).
-2. On **Settings**, enter your pilot start date, departments, and GSA Mentor Leads.
-3. Build the two forms from `ScholarLink_Form_Questions.md`, copying the answer choices exactly.
-4. Clear the rows marked (SAMPLE) before entering real responses.
+Students with no available mentor wait and are matched automatically when a mentor joins or a spot frees up.
+Help requests go to the least-busy volunteer, from the same field when possible, with up to 3 open requests per volunteer.
 
-The workbook stores only templates and fictional sample data. Keep real student responses out of this repository.
+### Where the data lives
+
+Submissions are saved as JSON text files in a **separate private GitHub repo** (`ScholarLink-data`), one commit
+per submission, so there's a full history. Student names and emails never touch this public repo.
+Departments, Mentor Leads, answer choices, and weights are set in that repo's `config.json`; edit it there and the site
+picks up changes within about a minute. See `data-template/` for the starting files.
+
+### Architecture
+
+```
+public/              static site (HTML/CSS/JS, no build step)
+netlify/functions/   api.mts – one serverless function serving /api/*
+src/logic.mts        validation, matching, help assignment, personal views
+src/store.mts        reads/writes JSON files in the data repo through the GitHub API (atomic commits, retry on conflict)
+data-template/       starting files for the private data repo
+```
+
+Hosted on Netlify. Environment variables:
+
+| Variable | Value |
+|---|---|
+| `GITHUB_TOKEN` | Fine-grained token with **Contents: read & write** on the data repo only |
+| `DATA_REPO` | `owner/ScholarLink-data` |
+| `DATA_BRANCH` | optional, defaults to `main` |
+
+Local development: `netlify dev` (with those variables set).
+
+### Safety
+
+- Only `@uga.edu` emails can register (set in `config.json`).
+- Each person gets a private link to their page. Only a hash of its secret is stored.
+- Matched pairs see each other's contact info. Nobody else's data is ever shown publicly; the home page shows only counts.
+- A hidden honeypot field filters basic bots.
+
+## Spreadsheet version
+
+The original offline pilot tools are still here:
+[`ScholarLink_Pilot.xlsx`](ScholarLink_Pilot.xlsx) (matching and tracking workbook) and
+[`ScholarLink_Form_Questions.md`](ScholarLink_Form_Questions.md) (Google/Microsoft Forms questions).

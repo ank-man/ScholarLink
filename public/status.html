@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>My ScholarLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>Bulldog Bridge</small></span></a>
+  <nav class="nav"><a href="/mentee.html">Find a mentor</a><a href="/mentor.html">Become a mentor</a><a href="/help.html">Application help</a><a href="/guide.html">Grad school guide</a></nav>
+</div></header>
+
+<main class="wrap narrow">
+  <div class="page-head"><p class="eyebrow">Private page</p><h1 id="title">My ScholarLink</h1><p class="lede" id="sub">Loading…</p></div>
+  <div id="msg"></div>
+  <div id="content"></div>
+</main>
+
+<footer><div class="wrap"><span>This page is private to you. Don't share its link.</span><a href="/guide.html">Grad school guide</a></div></footer>
+<script src="/app.js"></script>
+<script>
+const params = new URLSearchParams(location.search)
+const ID = params.get("id"), TOKEN = params.get("t")
+const today = new Date().toLocaleDateString("en-CA")
+const fmt = (d) => d ? new Date(d + (d.length === 10 ? "T12:00:00" : "")).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : ""
+const badge = (s) => `<span class="badge ${s === "Completed" || s === "Resolved" ? "ok" : ""}">${esc(s)}</span>`
+const lead = (l) => l ? `<p class="form-note">Questions or need a different match? Contact your Mentor Lead, ${esc(l.name)}${l.email ? ` (<a href="mailto:${esc(l.email)}">${esc(l.email)}</a>)` : ""}.</p>` : `<p class="form-note">Questions or need a different match? Contact your department's GSA Mentor Lead.</p>`
+
+function meetingTools(m) {
+  const step = !m.meeting1 ? 1 : !m.meeting2 ? 2 : 0
+  const log = step ? `<label class="hint" style="margin:0">Meeting ${step} date</label><input type="date" max="${today}" value="${today}" id="d-${m.id}">
+      <button class="btn btn-primary btn-small" data-act="meeting" data-match="${m.id}" data-which="${step}">Log meeting ${step} ✓</button>` : ""
+  const stars = m.meeting1 ? `<span class="stars" aria-label="Rate this mentorship">${[1,2,3,4,5].map((n) =>
+      `<button class="${(m.myRating || 0) >= n ? "on" : ""}" data-act="rate" data-match="${m.id}" data-rating="${n}" aria-label="${n} star${n > 1 ? "s" : ""}">★</button>`).join("")}</span><span class="hint" style="margin:0">${m.myRating ? "Thanks for rating!" : "How's it going?"}</span>` : ""
+  return `<div class="tools">${log}${stars}</div>`
+}
+const meetingsLine = (m) => `<dt>Meetings</dt><dd>${m.meeting1 ? "1 ✓ " + fmt(m.meeting1) : "Not yet"}${m.meeting2 ? " · 2 ✓ " + fmt(m.meeting2) : ""}</dd>`
+
+function render(v) {
+  $("#title").textContent = `Hi, ${v.name.split(" ")[0]}`
+  let html = ""
+  if (v.role === "mentee") {
+    $("#sub").textContent = `Student · ${v.department} · ID ${v.id}`
+    const m = v.match
+    html = m ? `<div class="card"><h2>Your mentor ${badge(m.status)}</h2>
+      <div class="person"><h3>${esc(m.other.name)}</h3><div class="meta">${esc(m.other.program)} · ${esc(m.other.department)}</div>
+      <dl><dt>Email</dt><dd><a href="mailto:${esc(m.other.email)}">${esc(m.other.email)}</a></dd><dt>Research</dt><dd>${esc(m.other.research)}</dd>
+      <dt>Prefers</dt><dd>${esc(m.other.format)} · ${esc(m.other.availability.join(", "))}</dd>${meetingsLine(m)}</dl>${meetingTools(m)}</div>
+      <p class="form-note">Goal: two meetings within eight weeks of ${fmt(m.createdAt.slice(0, 10))}. Not sure what to ask? See <a href="/guide.html#questions">questions to ask a mentor</a>.</p>${lead(v.lead)}</div>`
+      : `<div class="card"><h2>Waiting for a mentor ${badge("Waiting")}</h2><p>No mentor in <b>${esc(v.department)}</b> has an open spot yet. You'll be matched automatically when one does; check back here.</p>${lead(v.lead)}</div>`
+  } else if (v.role === "mentor") {
+    $("#sub").textContent = `Mentor · ${v.department} · ${v.openSlots} of ${v.maxMentees} spots open · ID ${v.id}`
+    html = `<div class="card"><h2>Your students</h2>` + (v.matches.length ? v.matches.map((m) => `
+      <div class="person"><h3>${esc(m.other.name)} ${badge(m.status)}</h3><div class="meta">${esc(m.other.year)} · ${esc(m.other.major)}</div>
+      <dl><dt>Email</dt><dd><a href="mailto:${esc(m.other.email)}">${esc(m.other.email)}</a></dd><dt>Interests</dt><dd>${esc(m.other.interests.join(", "))}</dd>
+      <dt>Goals</dt><dd>${esc(m.other.careers.join(", "))}</dd><dt>Free</dt><dd>${esc(m.other.format)} · ${esc(m.other.availability.join(", "))}</dd>
+      ${m.other.hopes ? `<dt>Hopes</dt><dd>${esc(m.other.hopes)}</dd>` : ""}${meetingsLine(m)}</dl>${meetingTools(m)}</div>`).join("")
+      : `<p>No students yet. You'll be matched as students in ${esc(v.department)} sign up.</p>`) + `</div>`
+    if (v.helpsWithApplications || v.help.length) {
+      html += `<div class="card" style="margin-top:16px"><h2>Application help requests</h2>` + (v.help.length ? v.help.map((h) => `
+        <div class="person"><h3>${esc(h.requester.name)} ${badge(h.status)}</h3><div class="meta">${esc(h.requester.year)} · ${esc(h.requester.major)} · applying to ${esc(h.requester.applicationType)}</div>
+        <dl><dt>Email</dt><dd><a href="mailto:${esc(h.requester.email)}">${esc(h.requester.email)}</a></dd><dt>Help with</dt><dd>${esc(h.requester.topics.join(", "))}</dd>
+        ${h.requester.targetPrograms ? `<dt>Programs</dt><dd>${esc(h.requester.targetPrograms)}</dd>` : ""}${h.requester.deadline ? `<dt>Deadline</dt><dd>${fmt(h.requester.deadline)}</dd>` : ""}
+        <dt>Details</dt><dd>${esc(h.requester.details)}</dd></dl>
+        ${h.status === "Assigned" ? `<div class="tools"><button class="btn btn-ghost btn-small" data-act="resolveHelp" data-help="${h.id}">Mark as done</button></div>` : ""}</div>`).join("")
+        : `<p>None yet. You'll be assigned requests as students ask for help.</p>`) + `</div>`
+    }
+    html += lead(v.lead)
+  } else {
+    $("#sub").textContent = `Application help · ${v.applicationType} · ID ${v.id}`
+    const h = v.helper
+    html = `<div class="card"><h2>Your request ${badge(v.status)}</h2><p class="hint">${esc(v.topics.join(" · "))}${v.deadline ? " · deadline " + fmt(v.deadline) : ""}</p>` +
+      (h ? `<div class="person"><h3>${esc(h.name)}</h3><div class="meta">${esc(h.program)} · ${esc(h.department)}</div>
+        <dl><dt>Email</dt><dd><a href="mailto:${esc(h.email)}">${esc(h.email)}</a></dd><dt>Background</dt><dd>${esc(h.research)}</dd></dl></div>`
+        : `<p>Waiting for a volunteer. You'll be assigned automatically as soon as one is free.</p>`) +
+      (v.status !== "Resolved" ? `<div class="tools"><button class="btn btn-ghost btn-small" data-act="resolveHelp">My question is answered, close this request</button></div>` : `<p>This request is closed. Need more help? <a href="/help.html">Open a new request</a>.</p>`) +
+      `</div><p class="form-note">While you wait, read the <a href="/guide.html">grad school application guide</a>.</p>`
+  }
+  $("#content").innerHTML = html
+}
+
+async function load() {
+  if (!ID || !TOKEN) { $("#sub").textContent = ""; $("#msg").innerHTML = `<div class="alert alert-err">This page needs your personal link. Use the link you saved when you signed up.</div>`; return }
+  try { render(await api(`status?id=${encodeURIComponent(ID)}&t=${encodeURIComponent(TOKEN)}`)) }
+  catch (e) { $("#sub").textContent = ""; $("#msg").innerHTML = `<div class="alert alert-err">${esc(e.message)}</div>` }
+}
+
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-act]")
+  if (!b) return
+  const body = { id: ID, token: TOKEN, action: b.dataset.act, matchId: b.dataset.match, helpId: b.dataset.help }
+  if (body.action === "meeting") { body.which = Number(b.dataset.which); body.date = $("#d-" + b.dataset.match).value }
+  if (body.action === "rate") body.rating = Number(b.dataset.rating)
+  b.disabled = true
+  $("#msg").innerHTML = ""
+  try { render((await api("update", body)).view); $("#msg").innerHTML = `<div class="alert alert-ok">Saved ✓</div>` }
+  catch (err) { $("#msg").innerHTML = `<div class="alert alert-err">${esc(err.message)}</div>`; b.disabled = false }
+})
+load()
+</script>
+</body>
+</html>

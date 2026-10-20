@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScholarLink · Graduate mentors for undergraduates</title>
+<meta name="description" content="ScholarLink pairs undergraduates with graduate student mentors in their field, and helps with graduate school applications.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>Bulldog Bridge</small></span></a>
+  <nav class="nav"><a href="/mentee.html">Find a mentor</a><a href="/mentor.html">Become a mentor</a><a href="/help.html">Application help</a><a href="/guide.html">Grad school guide</a></nav>
+</div></header>
+
+<main>
+  <div class="wrap hero">
+    <p class="eyebrow">Graduate mentors for undergraduates</p>
+    <h1>Find someone who's already been where you're going.</h1>
+    <p class="lede">ScholarLink connects undergraduates with graduate students in the field they're curious about: for research advice, career questions, or help getting into grad school. It's two conversations over eight weeks and it's free.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/mentee.html">Find a mentor →</a>
+      <a class="btn btn-ghost" href="/mentor.html">I'm a grad student, I want to mentor</a>
+    </div>
+  </div>
+
+  <section class="wrap" aria-label="Program numbers">
+    <div class="stats" id="stats">
+      <div class="stat"><b data-k="mentors">–</b><span>graduate mentors</span></div>
+      <div class="stat"><b data-k="students">–</b><span>students signed up</span></div>
+      <div class="stat"><b data-k="matches">–</b><span>pairs matched</span></div>
+      <div class="stat"><b data-k="meetings">–</b><span>meetings held</span></div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>What you can do here</h2>
+    <div class="grid">
+      <a class="card" href="/mentee.html"><div class="icon">🎓</div><h3>Get a mentor</h3><p>Tell us your interests and goals. We'll pair you with a grad student in your chosen department right away.</p><span class="go">Sign up as a student →</span></a>
+      <a class="card" href="/mentor.html"><div class="icon">🤝</div><h3>Become a mentor</h3><p>Share what you already know. Two meetings per student, a participation certificate, and leadership recognition.</p><span class="go">Sign up as a mentor →</span></a>
+      <a class="card" href="/help.html"><div class="icon">✍️</div><h3>Get application help</h3><p>Statement of purpose, CV, choosing programs, emailing faculty. A grad student volunteer will help.</p><span class="go">Request help →</span></a>
+      <a class="card" href="/guide.html"><div class="icon">🧭</div><h3>Grad school guide</h3><p>Timeline, documents, funding, and a checklist for applying to graduate and professional programs.</p><span class="go">Read the guide →</span></a>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><b>Sign up in 3 minutes</b>Pick a department and add a few interest keywords, your goals, and when you're free.</li>
+      <li><b>Get matched instantly</b>We pair you with the best-fit mentor in that department who has room.</li>
+      <li><b>Meet twice in 8 weeks</b>In person or on Zoom. Your private page shows your mentor's contact info.</li>
+      <li><b>Log it and tell us how it went</b>Mark meetings done and rate the experience. That's how the program improves.</li>
+    </ol>
+    <p class="form-note">If no mentor in your department has room yet, you'll be matched automatically as soon as one signs up. Each department's GSA Mentor Lead keeps an eye on matches.</p>
+  </section>
+
+  <section class="wrap" id="dept-wrap" hidden>
+    <h2>Departments in the pilot</h2>
+    <div class="table-scroll"><table class="simple" id="dept-table"><thead><tr><th>Department</th><th>Mentors</th><th>Open mentor spots</th><th>Students waiting</th></tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>ScholarLink is a student-run mentorship pilot. It is not an official University of Georgia website.</span><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></div></footer>
+<script src="/app.js"></script>
+<script>
+api("stats").then((s) => {
+  document.querySelectorAll("#stats [data-k]").forEach((el) => (el.textContent = s[el.dataset.k]))
+  if (s.departments.length) {
+    $("#dept-table tbody").innerHTML = s.departments.map((d) =>
+      `<tr><td>${esc(d.name)}</td><td>${d.mentors}</td><td>${d.openSlots}</td><td>${d.waiting}</td></tr>`).join("")
+    $("#dept-wrap").hidden = false
+  }
+}).catch(() => {})
+</script>
+</body>
+</html>
