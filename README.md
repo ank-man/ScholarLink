@@ -1,6 +1,6 @@
 # ScholarLink
 
-**Part of Bulldog Bridge: graduate student mentors for undergraduates at the University of Georgia.**
+**A Bulldog Bridge initiative from UGA GSA: graduate student mentors for undergraduates at the University of Georgia.**
 
 ScholarLink pairs undergraduates with graduate student mentors in their field of interest, and connects
 students applying to grad school with volunteers who can help. Mentors commit to just **two meetings over eight weeks**,
@@ -15,7 +15,9 @@ and a departmental **GSA Mentor Lead** oversees matches in each pilot department
 | `/mentor.html` | Grad students sign up; any waiting students are matched to them right away |
 | `/help.html` | Students request grad application help; a volunteer mentor is assigned automatically |
 | `/guide.html` | Grad school application guide: timeline, documents, statement of purpose, letters, funding, checklist |
-| `/status.html` | Each person's private page (secret link): see their match and contact info, log meetings, rate, close help requests |
+| `/status.html` | Each person's private page (secret link): see their match and contact info, track progress, log meetings, rate, close help requests |
+| `/cards.html` | Name Card Studio: mentor, mentee, and match cards in 6 themes and 3 sizes (badge, square, story). Download PNG, copy, share, or print a badge sheet. Runs entirely in the browser |
+| `/tap.html` | ScholarTap digital card: a phone-friendly profile opened from a link or QR code, with "Save contact". The details live in the link itself (after `#`), never on the server |
 
 ### How matching works
 
@@ -41,7 +43,7 @@ picks up changes within about a minute. See `data-template/` for the starting fi
 ### Architecture
 
 ```
-public/              static site (HTML/CSS/JS, no build step)
+public/              static site (HTML/CSS/JS, no build step); cards.js draws name cards on a canvas
 netlify/functions/   api.mts – one serverless function serving /api/*
 src/logic.mts        validation, matching, help assignment, personal views
 src/store.mts        reads/writes JSON files in the data repo through the GitHub API (atomic commits, retry on conflict)

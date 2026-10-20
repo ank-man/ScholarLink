@@ -4,35 +4,34 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Become a mentor · ScholarLink</title>
+<meta name="theme-color" content="#ba0c2f">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<script src="/app.js"></script>
 </head>
 <body>
-<header class="site-head"><div class="wrap">
-  <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>Bulldog Bridge</small></span></a>
-  <nav class="nav"><a href="/mentee.html">Find a mentor</a><a href="/mentor.html" aria-current="page">Become a mentor</a><a href="/help.html">Application help</a><a href="/guide.html">Grad school guide</a></nav>
-</div></header>
+<header class="site-head"></header><script>renderHeader("mentor")</script>
 
 <main class="wrap narrow">
   <div class="page-head">
     <p class="eyebrow">For graduate students</p>
-    <h1>Become a ScholarLink mentor</h1>
+    <h1>Become a <span class="grad">ScholarLink mentor</span></h1>
     <p class="lede">You don't need to do more. Just share what you already know. Two conversations per student over eight weeks, at times that suit you.</p>
   </div>
 
-  <div class="grid" style="margin-bottom:28px">
-    <div class="card"><h3>Light commitment</h3><p>Two meetings per student. You choose how many students (1–3).</p></div>
-    <div class="card"><h3>Recognition</h3><p>A participation certificate, leadership recognition, and a feature highlighting your contribution.</p></div>
-    <div class="card"><h3>Optional extra</h3><p>Volunteer to help undergrads with grad school applications: SOP reads, CV tips, and more.</p></div>
+  <div class="perks">
+    <div class="card reveal"><h3>🌱 Light commitment</h3><p>Two meetings per student. You choose how many students (1–3).</p></div>
+    <div class="card reveal"><h3>🏅 Recognition</h3><p>A participation certificate, leadership recognition, and a feature highlighting your contribution.</p></div>
+    <div class="card reveal"><h3>✍️ Optional extra</h3><p>Volunteer to help undergrads with grad school applications: SOP reads, CV tips, and more.</p></div>
   </div>
 
   <div id="form-msg"></div>
   <form id="mentor-form" class="card" novalidate>
     <div class="row">
       <fieldset><label class="lbl req" for="name">Full name</label><input id="name" name="name" type="text" autocomplete="name" required maxlength="80"></fieldset>
-      <fieldset><label class="lbl req" for="email">University email</label><input id="email" name="email" type="email" autocomplete="email" required><p class="hint">Must end in <span data-domain>@uga.edu</span></p></fieldset>
+      <fieldset><label class="lbl req" for="email">University email</label><input id="email" name="email" type="email" autocomplete="email" required><p class="hint" style="margin:6px 0 0">Must end in <span data-domain>@uga.edu</span></p></fieldset>
     </div>
     <div class="row">
       <fieldset><label class="lbl req" for="program">Program</label><select id="program" name="program" data-options="programs" required></select></fieldset>
@@ -57,27 +56,28 @@
     <fieldset><label class="lbl" for="notes">Anything else we should know?</label><textarea id="notes" name="notes" maxlength="1000"></textarea></fieldset>
     <fieldset><label class="agree"><input type="checkbox" name="commitment" data-single required><span>I can commit to <b>two meetings</b> with each student over <b>eight weeks</b>.</span></label></fieldset>
     <div class="hp" aria-hidden="true"><label>Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
-    <button type="submit" class="btn btn-primary">Sign me up</button>
+    <button type="submit" class="btn btn-primary btn-block">Sign me up <span class="arrow">→</span></button>
     <p class="form-note">Students matched with you see your name, email, program, department, and research description.</p>
   </form>
 
   <div id="result" class="card result" hidden></div>
 </main>
 
-<footer><div class="wrap"><span>ScholarLink is a student-run mentorship pilot. It is not an official University of Georgia website.</span><a href="/guide.html">Grad school guide</a></div></footer>
-<script src="/app.js"></script>
+<footer class="site-foot"></footer>
 <script>
 setupForm({
   formId: "mentor-form", endpoint: "mentor", label: "Mentor",
-  renderResult(v, url) {
-    const people = v.matches.map((m) => `<div class="person"><h3>${esc(m.other.name)}</h3><div class="meta">${esc(m.other.year)} · ${esc(m.other.major)}</div>
+  renderResult(v, url, f) {
+    const people = v.matches.map((m, i) => `<div class="person"><div class="person-head">${avatar(m.other.name, i % 2)}<div><h3>${esc(m.other.name)}</h3><div class="meta">${esc(m.other.year)} · ${esc(m.other.major)}</div></div></div>
       <dl><dt>Email</dt><dd><a href="mailto:${esc(m.other.email)}">${esc(m.other.email)}</a></dd><dt>Interests</dt><dd>${esc(m.other.interests.join(", "))}</dd></dl></div>`).join("")
     const help = v.help.length ? `<p>You've also been assigned <b>${v.help.length}</b> application help request(s). See your page for details.</p>` : ""
-    return `<h2>Thank you for mentoring! 🎉</h2>` +
+    const card = { role: "mentor", name: v.name, line1: f.program, department: v.department,
+      interests: String(f.research || "").split(/[,;\n]/).map((s) => s.trim()).filter(Boolean).slice(0, 3) }
+    return `<p class="eyebrow">Welcome aboard</p><h2>Thank you for mentoring! 🎉</h2>` +
       (v.matches.length
         ? `<p>${v.matches.length === 1 ? "A student was" : "Students were"} already waiting in your department and ${v.matches.length === 1 ? "has" : "have"} been matched with you:</p>${people}<p>Expect an email from ${v.matches.length === 1 ? "them" : "each of them"} to set up a first meeting, or reach out first.</p>`
         : `<p>You'll be matched as students sign up for <b>${esc(v.department)}</b>. Check your personal page to see who you're matched with.</p>`) +
-      help + `<h3>Your personal page</h3>` + saveNote + linkBox(url)
+      help + cardCta(card, "Make your mentor card") + `<h3>Your personal page</h3>` + saveNote + linkBox(url)
   },
 })
 </script>

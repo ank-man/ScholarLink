@@ -4,30 +4,34 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Application help · ScholarLink</title>
+<meta name="theme-color" content="#ba0c2f">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<script src="/app.js"></script>
 </head>
 <body>
-<header class="site-head"><div class="wrap">
-  <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>Bulldog Bridge</small></span></a>
-  <nav class="nav"><a href="/mentee.html">Find a mentor</a><a href="/mentor.html">Become a mentor</a><a href="/help.html" aria-current="page">Application help</a><a href="/guide.html">Grad school guide</a></nav>
-</div></header>
+<header class="site-head"></header><script>renderHeader("help")</script>
 
 <main class="wrap narrow">
   <div class="page-head">
     <p class="eyebrow">Applying to grad school</p>
-    <h1>Get help with your application</h1>
+    <h1>Get help with <span class="grad">your application</span></h1>
     <p class="lede">A graduate student volunteer, from your field when possible, will help with your statement, CV, program list, or anything else in the process.</p>
-    <p>New to this? Start with the <a href="/guide.html">grad school application guide</a>.</p>
+  </div>
+
+  <div class="perks">
+    <div class="card reveal"><h3>📝 Real feedback</h3><p>Someone who got in recently reads your statement or CV.</p></div>
+    <div class="card reveal"><h3>🎯 Your field</h3><p>Matched to a volunteer in your field whenever possible.</p></div>
+    <a class="card reveal" href="/guide.html"><h3>🧭 Start here</h3><p>New to this? Read the step-by-step guide first.</p></a>
   </div>
 
   <div id="form-msg"></div>
   <form id="help-form" class="card" novalidate>
     <div class="row">
       <fieldset><label class="lbl req" for="name">Full name</label><input id="name" name="name" type="text" autocomplete="name" required maxlength="80"></fieldset>
-      <fieldset><label class="lbl req" for="email">University email</label><input id="email" name="email" type="email" autocomplete="email" required><p class="hint">Must end in <span data-domain>@uga.edu</span></p></fieldset>
+      <fieldset><label class="lbl req" for="email">University email</label><input id="email" name="email" type="email" autocomplete="email" required><p class="hint" style="margin:6px 0 0">Must end in <span data-domain>@uga.edu</span></p></fieldset>
     </div>
     <div class="row">
       <fieldset><label class="lbl req" for="year">Year</label><select id="year" name="year" data-options="years" data-extra="Graduate / alum" required></select></fieldset>
@@ -49,27 +53,27 @@
     </fieldset>
     <fieldset><legend class="req">Meeting format</legend><div class="choices" data-choices="formats" data-name="format" data-type="radio"></div></fieldset>
     <div class="hp" aria-hidden="true"><label>Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
-    <button type="submit" class="btn btn-primary">Request help</button>
+    <button type="submit" class="btn btn-primary btn-block">Request help <span class="arrow">→</span></button>
     <p class="form-note">Your helper sees what you enter here. Volunteers give feedback; they don't write applications for you.</p>
   </form>
 
   <div id="result" class="card result" hidden></div>
 </main>
 
-<footer><div class="wrap"><span>ScholarLink is a student-run mentorship pilot. It is not an official University of Georgia website.</span><a href="/guide.html">Grad school guide</a></div></footer>
-<script src="/app.js"></script>
+<footer class="site-foot"></footer>
 <script>
 setupForm({
   formId: "help-form", endpoint: "help", label: "Help request",
   renderResult(v, url) {
     const h = v.helper
     return (h
-      ? `<h2>You've got a helper ✓</h2><div class="person"><h3>${esc(h.name)}</h3><div class="meta">${esc(h.program)} · ${esc(h.department)}</div>
+      ? `<p class="eyebrow">Connected</p><h2>You've got a helper ✓</h2><div class="person"><div class="person-head">${avatar(h.name)}<div><h3>${esc(h.name)}</h3><div class="meta">${esc(h.program)} · ${esc(h.department)}</div></div></div>
          <dl><dt>Email</dt><dd><a href="mailto:${esc(h.email)}">${esc(h.email)}</a></dd><dt>Background</dt><dd>${esc(h.research)}</dd></dl></div>
          <p><b>Next step:</b> email ${esc(h.name.split(" ")[0])} with your request${v.deadline ? ` and your ${esc(v.deadline)} deadline` : ""}. Attach any document you'd like reviewed.</p>`
       : `<h2>Request received ✓</h2><p>No application volunteer is free right now. You'll be assigned automatically as soon as one is free. Check your personal page. Meanwhile, the <a href="/guide.html">guide</a> covers the basics.</p>`)
       + `<h3>Your personal page</h3>` + saveNote + linkBox(url)
   },
+  celebrate: (v) => !!v.helper,
 })
 </script>
 </body>

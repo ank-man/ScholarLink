@@ -155,6 +155,7 @@ export function publicConfig(c: any) {
     maxMenteesOptions: c.maxMenteesOptions,
     helpTopics: c.helpTopics,
     applicationTypes: c.applicationTypes,
+    weights: c.weights,
   }
 }
 
@@ -327,6 +328,7 @@ export function viewFor(data: Data, id: string): any {
     const mentor = match && data.mentors.find((x: any) => x.id === match.mentorId)
     return {
       role: "mentee", id, name: me.name, department: me.department,
+      year: me.year, major: me.major, interests: me.interests,
       lead: leadFor(data, me.department),
       match: match && mentor ? {
         id: match.id, status: match.status, createdAt: match.createdAt,
@@ -340,6 +342,7 @@ export function viewFor(data: Data, id: string): any {
     const me = data.mentors.find((x: any) => x.id === id)
     return {
       role: "mentor", id, name: me.name, department: me.department,
+      program: me.program, research: me.research,
       maxMentees: me.maxMentees, openSlots: openSlots(me, data.matches),
       helpsWithApplications: me.helpsWithApplications,
       lead: leadFor(data, me.department),

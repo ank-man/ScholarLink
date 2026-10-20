@@ -3,31 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ScholarLink · Graduate mentors for undergraduates</title>
-<meta name="description" content="ScholarLink pairs undergraduates with graduate student mentors in their field, and helps with graduate school applications.">
+<title>ScholarLink · Bulldog Bridge</title>
+<meta name="description" content="A Bulldog Bridge initiative from UGA GSA. ScholarLink pairs undergraduates with graduate student mentors in their field, and helps with graduate school applications.">
+<meta name="theme-color" content="#ba0c2f">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<script src="/app.js"></script>
 </head>
 <body>
-<header class="site-head"><div class="wrap">
-  <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>Bulldog Bridge</small></span></a>
-  <nav class="nav"><a href="/mentee.html">Find a mentor</a><a href="/mentor.html">Become a mentor</a><a href="/help.html">Application help</a><a href="/guide.html">Grad school guide</a></nav>
-</div></header>
+<header class="site-head"></header><script>renderHeader("home")</script>
 
 <main>
   <div class="wrap hero">
-    <p class="eyebrow">Graduate mentors for undergraduates</p>
-    <h1>Find someone who's already been where you're going.</h1>
-    <p class="lede">ScholarLink connects undergraduates with graduate students in the field they're curious about: for research advice, career questions, or help getting into grad school. It's two conversations over eight weeks and it's free.</p>
-    <div class="actions">
-      <a class="btn btn-primary" href="/mentee.html">Find a mentor →</a>
-      <a class="btn btn-ghost" href="/mentor.html">I'm a grad student, I want to mentor</a>
+    <div>
+      <p class="eyebrow pill"><span class="dot"></span><span data-tagline>A Bulldog Bridge initiative from UGA GSA</span></p>
+      <h1>Find someone who's already been <span class="grad">where you're going.</span></h1>
+      <p class="lede">ScholarLink connects undergraduates with graduate students in the field they're curious about: for research advice, career questions, or help getting into grad school. Two conversations over eight weeks. Free.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/mentee.html">Find a mentor <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="/mentor.html">I'm a grad student</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="float-card a">
+        <div class="fc-top"><span class="avatar">PR</span><div><div class="fc-name">Priya R.</div><div class="fc-sub">PhD · Genetics</div></div></div>
+        <div class="tags"><span class="tag">CRISPR</span><span class="tag">plant biology</span><span class="tag">R</span></div>
+      </div>
+      <div class="float-card b">
+        <div class="fc-sub" style="margin-bottom:8px">Match found in 0.4s</div>
+        <div class="match-meter"><span>92</span><div class="bar"><span></span></div></div>
+        <div class="fc-sub" style="margin-top:8px">Same department · 2 shared interests · both free weekday afternoons</div>
+      </div>
+      <div class="float-card c">
+        <div class="fc-top" style="margin:0"><span class="avatar v2">JM</span><div><div class="fc-name">Meeting 1 logged ✓</div><div class="fc-sub">Jordan &amp; Priya · Zoom</div></div></div>
+      </div>
     </div>
   </div>
 
-  <section class="wrap" aria-label="Program numbers">
+  <section class="wrap reveal" aria-label="Program numbers">
     <div class="stats" id="stats">
       <div class="stat"><b data-k="mentors">–</b><span>graduate mentors</span></div>
       <div class="stat"><b data-k="students">–</b><span>students signed up</span></div>
@@ -37,43 +52,103 @@
   </section>
 
   <section class="wrap">
-    <h2>What you can do here</h2>
-    <div class="grid">
-      <a class="card" href="/mentee.html"><div class="icon">🎓</div><h3>Get a mentor</h3><p>Tell us your interests and goals. We'll pair you with a grad student in your chosen department right away.</p><span class="go">Sign up as a student →</span></a>
-      <a class="card" href="/mentor.html"><div class="icon">🤝</div><h3>Become a mentor</h3><p>Share what you already know. Two meetings per student, a participation certificate, and leadership recognition.</p><span class="go">Sign up as a mentor →</span></a>
-      <a class="card" href="/help.html"><div class="icon">✍️</div><h3>Get application help</h3><p>Statement of purpose, CV, choosing programs, emailing faculty. A grad student volunteer will help.</p><span class="go">Request help →</span></a>
-      <a class="card" href="/guide.html"><div class="icon">🧭</div><h3>Grad school guide</h3><p>Timeline, documents, funding, and a checklist for applying to graduate and professional programs.</p><span class="go">Read the guide →</span></a>
+    <div class="section-head reveal"><h2>Everything in one place</h2><p>Sign up, get matched, prepare your application, and make a name card to bring to your first meeting.</p></div>
+    <div class="bento">
+      <a class="card reveal" href="/mentee.html"><div class="icon">🎓</div><h3>Get a mentor</h3><p>Tell us your interests and goals. We'll pair you with a grad student in your chosen department right away.</p><span class="go">Sign up as a student <span class="arrow">→</span></span></a>
+      <a class="card reveal" href="/mentor.html"><div class="icon">🤝</div><h3>Become a mentor</h3><p>Share what you already know. Two meetings per student, a participation certificate, and leadership recognition.</p><span class="go">Sign up as a mentor <span class="arrow">→</span></span></a>
+      <a class="card reveal" href="/help.html"><div class="icon">✍️</div><h3>Application help</h3><p>Statement of purpose, CV, choosing programs, emailing faculty. A grad student volunteer will help.</p><span class="go">Request help <span class="arrow">→</span></span></a>
+      <a class="card feature-dark wide reveal" href="/cards.html"><div class="icon">🪪</div><h3>Name Card Studio <span class="badge" style="background:#fff;color:#ba0c2f">New</span></h3><p>Design a mentor or mentee name card in seconds. Pick a theme, add a photo, download a PNG for socials, or print badges for orientation.</p>
+        <div class="mini-cards"><span></span><span></span><span></span><span></span></div><span class="go">Open the studio <span class="arrow">→</span></span></a>
+      <a class="card reveal" href="/guide.html"><div class="icon">🧭</div><h3>Grad school guide</h3><p>Timeline, documents, funding, and a checklist for applying to graduate and professional programs.</p><span class="go">Read the guide <span class="arrow">→</span></span></a>
     </div>
   </section>
 
   <section class="wrap">
-    <h2>How it works</h2>
-    <ol class="steps">
+    <div class="section-head reveal"><h2>How it works</h2><p>About three minutes to sign up. The rest is two good conversations.</p></div>
+    <ol class="steps reveal">
       <li><b>Sign up in 3 minutes</b>Pick a department and add a few interest keywords, your goals, and when you're free.</li>
       <li><b>Get matched instantly</b>We pair you with the best-fit mentor in that department who has room.</li>
       <li><b>Meet twice in 8 weeks</b>In person or on Zoom. Your private page shows your mentor's contact info.</li>
-      <li><b>Log it and tell us how it went</b>Mark meetings done and rate the experience. That's how the program improves.</li>
+      <li><b>Log it and rate it</b>Mark meetings done and tell us how it went. That's how the program improves.</li>
     </ol>
-    <p class="form-note">If no mentor in your department has room yet, you'll be matched automatically as soon as one signs up. Each department's GSA Mentor Lead keeps an eye on matches.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="bento">
+      <div class="card half reveal">
+        <p class="eyebrow">Under the hood</p>
+        <h2>How a match is scored</h2>
+        <p style="margin-bottom:22px">Every mentor in your department with an open spot gets a score. Highest score wins; ties go to whoever joined first. If nobody has room, you're matched automatically the moment someone does.</p>
+        <div class="weights" id="weights"></div>
+      </div>
+      <div class="card half reveal">
+        <p class="eyebrow">Built for trust</p>
+        <h2>Private by default</h2>
+        <ul class="check" style="margin:0">
+          <li>🔒&nbsp; Only <b>@uga.edu</b> emails can register.</li>
+          <li>🔗&nbsp; You get a private link to your page. Only a hash of its secret is stored.</li>
+          <li>👥&nbsp; Only your match sees your contact info. The site shows counts, never names.</li>
+          <li>🧑‍🏫&nbsp; Each department has a GSA Mentor Lead who keeps an eye on matches.</li>
+          <li>🖼️&nbsp; Name cards are made in your browser. Photos are never uploaded.</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
   <section class="wrap" id="dept-wrap" hidden>
-    <h2>Departments in the pilot</h2>
-    <div class="table-scroll"><table class="simple" id="dept-table"><thead><tr><th>Department</th><th>Mentors</th><th>Open mentor spots</th><th>Students waiting</th></tr></thead><tbody></tbody></table></div>
+    <div class="section-head reveal"><h2>Departments in the pilot</h2><p>Open spots update as mentors join and pairs finish.</p></div>
+    <div class="dept-grid" id="depts"></div>
+  </section>
+
+  <section class="wrap narrow faq">
+    <div class="section-head reveal"><h2>Questions</h2></div>
+    <div class="reveal">
+      <details><summary>Who can join?</summary><p>Any UGA undergraduate can sign up as a student. Any UGA graduate student (Master's, PhD, or professional) can sign up as a mentor. During the pilot, only a few departments are open; more will be added.</p></details>
+      <details><summary>How much time does it take?</summary><p>Two meetings over eight weeks. Most pairs meet for 30–45 minutes, in person or on Zoom. Mentors choose how many students to take, from one to three.</p></details>
+      <details><summary>What if nobody in my department has room?</summary><p>You'll go on the waitlist and be matched automatically as soon as a mentor joins or a spot frees up. Check your private page for updates.</p></details>
+      <details><summary>What if the match isn't working?</summary><p>Contact your department's GSA Mentor Lead (their email is on your private page). They can help or arrange a new match.</p></details>
+      <details><summary>What are name cards for?</summary><p>Bring one to orientation or your first meeting, post it to celebrate joining, or print a sheet of badges for a department mixer. Everything is drawn in your browser.</p></details>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="cta reveal">
+      <div><h2 style="color:#fff">Ready when you are.</h2><p>Grad students remember who helped them. Be that person, or find yours.</p></div>
+      <div class="actions" style="margin:0"><a class="btn btn-ghost" href="/mentee.html">Find a mentor <span class="arrow">→</span></a><a class="btn btn-ghost" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)" href="/mentor.html">Become a mentor</a></div>
+    </div>
   </section>
 </main>
 
-<footer><div class="wrap"><span>ScholarLink is a student-run mentorship pilot. It is not an official University of Georgia website.</span><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></div></footer>
-<script src="/app.js"></script>
+<footer class="site-foot"></footer>
 <script>
+$$("[data-tagline]").forEach((el) => (el.textContent = TAGLINE))
+const LABELS = { department: "Same department", keyword: "Each shared interest keyword", career: "Each shared career path", availability: "Each shared free time", format: "Compatible meeting format" }
+function drawWeights(w) {
+  const max = Math.max(...Object.values(w))
+  $("#weights").innerHTML = Object.entries(LABELS).filter(([k]) => k in w).map(([k, label]) =>
+    `<div class="weight"><span>${label}</span><div class="meter"><span style="width:0" data-w="${(w[k] / max) * 100}"></span></div><b>+${w[k]}</b></div>`).join("")
+  const io = new IntersectionObserver(([en]) => {
+    if (!en.isIntersecting) return
+    $$("#weights [data-w]").forEach((s, i) => setTimeout(() => (s.style.width = s.dataset.w + "%"), i * 120))
+    io.disconnect()
+  })
+  io.observe($("#weights"))
+}
+getConfig().then((c) => drawWeights(c.weights)).catch(() => drawWeights({ department: 40, keyword: 10, career: 8, availability: 5, format: 5 }))
+
 api("stats").then((s) => {
-  document.querySelectorAll("#stats [data-k]").forEach((el) => (el.textContent = s[el.dataset.k]))
+  $$("#stats [data-k]").forEach((el) => countUp(el, s[el.dataset.k]))
   if (s.departments.length) {
-    $("#dept-table tbody").innerHTML = s.departments.map((d) =>
-      `<tr><td>${esc(d.name)}</td><td>${d.mentors}</td><td>${d.openSlots}</td><td>${d.waiting}</td></tr>`).join("")
+    $("#depts").innerHTML = s.departments.map((d) => {
+      const pct = d.mentors ? Math.round((d.openSlots / Math.max(1, d.openSlots + d.waiting)) * 100) : 0
+      return `<div class="dept reveal"><span class="dept-status ${d.openSlots ? "open" : "full"}">${d.openSlots ? "Spots open" : d.mentors ? "Waitlist" : "Needs mentors"}</span>
+        <h3>${esc(d.name)}</h3><div class="meter"><span style="width:${d.openSlots ? Math.max(8, pct) : 0}%"></span></div>
+        <div class="nums"><span><b>${d.mentors}</b> mentors</span><span><b>${d.openSlots}</b> open</span><span><b>${d.waiting}</b> waiting</span></div></div>`
+    }).join("")
     $("#dept-wrap").hidden = false
+    reveal($("#dept-wrap"))
   }
-}).catch(() => {})
+}).catch(() => $$("#stats [data-k]").forEach((el) => (el.textContent = "·")))
 </script>
 </body>
 </html>

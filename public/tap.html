@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>ScholarTap · ScholarLink</title>
+<meta name="theme-color" content="#ba0c2f">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<script src="/app.js"></script>
+<script src="/cards.js"></script>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+<main class="tap-page" id="tap-root"></main>
+<script>
+// Only allow normal web links; add https:// when someone typed "linkedin.com/in/…".
+function safeUrl(v) {
+  if (!v) return ""
+  let s = String(v).trim()
+  if (!/^https?:\/\//i.test(s)) s = "https://" + s
+  try { const u = new URL(s); return u.protocol === "https:" || u.protocol === "http:" ? u.href : "" } catch { return "" }
+}
+const safeEmail = (v) => /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(v || "") ? v : ""
+
+function vcard(d, site, li) {
+  const e = (s) => String(s || "").replace(/[\\,;]/g, (c) => "\\" + c).replace(/\n/g, " ")
+  const parts = (d.name || "").trim().split(/\s+/)
+  return ["BEGIN:VCARD", "VERSION:3.0", `FN:${e(d.name)}`, `N:${e(parts.slice(1).join(" "))};${e(parts[0])};;;`,
+    d.department ? `ORG:University of Georgia;${e(d.department)}` : "", d.line1 ? `TITLE:${e(d.line1)}` : "",
+    safeEmail(d.email) ? `EMAIL;TYPE=INTERNET:${e(d.email)}` : "", site ? `URL:${site}` : "", li ? `URL;TYPE=LinkedIn:${li}` : "",
+    `NOTE:${e(`ScholarLink ${d.role === "mentee" ? "mentee" : "mentor"}${d.interests ? " · " + d.interests : ""}`)}`, "END:VCARD"].filter(Boolean).join("\r\n")
+}
+
+function renderTap() {
+  const d = tapDecode(location.hash.slice(1))
+  const root = $("#tap-root")
+  if (!d || !d.name) {
+    root.innerHTML = `<div class="tap"><div class="tap-body" style="padding:36px 24px"><h1>No card here</h1><p class="sub">This ScholarTap link looks incomplete. Ask the owner to share it again, or make your own.</p>
+      <div class="tap-actions" style="margin-top:20px"><a class="btn btn-primary" href="/cards.html">Make my card</a></div></div></div>`
+    return
+  }
+  const th = THEMES[d.theme] || THEMES.bulldog
+  const role = d.role === "mentee" ? "MENTEE" : "MENTOR"
+  const site = safeUrl(d.website), li = safeUrl(d.linkedin), email = safeEmail(d.email)
+  const tags = String(d.interests || "").split(/[,;]/).map((s) => s.trim()).filter(Boolean).slice(0, 6)
+  document.title = `${d.name} · ScholarTap`
+  root.innerHTML = `<article class="tap">
+    <div class="tap-hero" style="background:${th.swatch};--tap-ink:${th.ink};--tap-pill-bg:${th.pillBg};--tap-pill-ink:${th.pillInk};--tap-mark-bg:${th.markBg};--tap-mark-ink:${th.markInk}">
+      <div class="top"><span class="mk"><i>S</i>ScholarLink</span><span class="role">${role}</span></div>
+    </div>
+    <div class="tap-avatar" style="background:linear-gradient(135deg,${th.av[0]},${th.av[1]});color:${th.avInk}">${esc(initialsOf(d.name))}</div>
+    <div class="tap-body">
+      <h1>${esc(d.name)}</h1>
+      <div class="sub">${esc([d.pronouns, d.line1].filter(Boolean).join(" · "))}</div>
+      ${d.department ? `<div class="tap-dept">${esc(d.department)}</div>` : ""}
+      ${tags.length ? `<div class="tags">${tags.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>` : ""}
+      ${d.quote ? `<blockquote>“${esc(d.quote)}”</blockquote>` : ""}
+      <div class="tap-actions">
+        <button type="button" class="btn btn-primary" id="save-contact">＋ Save contact</button>
+        ${email ? `<a class="btn btn-ghost" href="mailto:${esc(email)}">✉️ Email ${esc(d.name.split(" ")[0])}</a>` : ""}
+        ${li ? `<a class="btn btn-ghost" href="${esc(li)}" target="_blank" rel="noopener nofollow">in&nbsp; LinkedIn</a>` : ""}
+        ${site ? `<a class="btn btn-ghost" href="${esc(site)}" target="_blank" rel="noopener nofollow">🔗 Website</a>` : ""}
+        ${navigator.share ? `<button type="button" class="btn btn-ghost" id="share-card">Share this card</button>` : ""}
+      </div>
+    </div>
+    <div class="tap-foot">${esc(TAGLINE)}<br><a href="/cards.html">Make your own card</a> · <a href="/">Find a mentor</a></div>
+  </article>`
+  $("#save-contact").onclick = () => {
+    const blob = new Blob([vcard(d, site, li)], { type: "text/vcard" })
+    const a = document.createElement("a")
+    a.href = URL.createObjectURL(blob); a.download = `${d.name.replace(/[^\w]+/g, "-")}.vcf`; a.click()
+    toast("Contact saved ✓")
+  }
+  const sh = $("#share-card")
+  if (sh) sh.onclick = () => navigator.share({ title: `${d.name} · ScholarTap`, url: location.href }).catch(() => {})
+}
+renderTap()
+addEventListener("hashchange", renderTap)
+</script>
+</body>
+</html>

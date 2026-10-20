@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Name Card Studio · ScholarLink</title>
+<meta name="description" content="Design a ScholarLink mentor, mentee, or match name card. Download a PNG or print badges.">
+<meta name="theme-color" content="#ba0c2f">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<script src="/app.js"></script>
+</head>
+<body>
+<header class="site-head"></header><script>renderHeader("cards")</script>
+
+<main class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Name Card Studio</p>
+    <h1>Make your <span class="grad">name card</span></h1>
+    <p class="lede">A card for mentors, mentees, or a matched pair. Pick a theme, add a photo, then download it for socials or print a sheet of badges for orientation. Everything stays in your browser.</p>
+  </div>
+
+  <div class="studio">
+    <form id="studio-form" class="card panel" autocomplete="off">
+      <fieldset>
+        <legend>Card type</legend>
+        <div class="seg">
+          <label><input type="radio" name="role" value="mentor"><span>🎓 Mentor</span></label>
+          <label><input type="radio" name="role" value="mentee"><span>🌱 Mentee</span></label>
+          <label><input type="radio" name="role" value="pair"><span>🤝 Match</span></label>
+        </div>
+      </fieldset>
+
+      <div class="solo-only">
+        <fieldset><label class="lbl" for="f-name">Name</label><input id="f-name" type="text" maxlength="60" placeholder="Your full name"></fieldset>
+        <div class="row">
+          <fieldset><label class="lbl" for="f-pronouns">Pronouns</label><input id="f-pronouns" type="text" maxlength="20" placeholder="optional"></fieldset>
+          <fieldset><label class="lbl" for="f-line1" id="l-line1">Program</label><input id="f-line1" type="text" maxlength="60"></fieldset>
+        </div>
+      </div>
+      <div class="pair-only" hidden>
+        <div class="row">
+          <fieldset><label class="lbl" for="f-mentorName">Mentor</label><input id="f-mentorName" type="text" maxlength="60" placeholder="Mentor's name"></fieldset>
+          <fieldset><label class="lbl" for="f-menteeName">Mentee</label><input id="f-menteeName" type="text" maxlength="60" placeholder="Mentee's name"></fieldset>
+        </div>
+      </div>
+
+      <fieldset><label class="lbl" for="f-department">Department</label><input id="f-department" type="text" maxlength="60" list="dept-list" placeholder="e.g., Genetics"><datalist id="dept-list"></datalist></fieldset>
+      <fieldset class="solo-only"><label class="lbl" for="f-interests">Interests</label><p class="hint">Separate with commas. The first few appear as tags.</p><input id="f-interests" type="text" maxlength="160" placeholder="e.g., CRISPR, plant biology, R"></fieldset>
+      <fieldset><label class="lbl" for="f-quote">Tagline</label><textarea id="f-quote" maxlength="120" style="min-height:70px"></textarea></fieldset>
+
+      <fieldset>
+        <legend>Photos <span class="hint" style="font-weight:400">(optional, never uploaded)</span></legend>
+        <div class="row">
+          <div>
+            <label class="dropzone" data-slot="a"><span class="thumb">📷</span><span><b id="l-dz-a">Photo</b><br>Click or drop an image</span><input type="file" accept="image/*"></label>
+            <button type="button" class="btn btn-ghost btn-small" data-clear="a" hidden style="margin-top:6px">Remove</button>
+          </div>
+          <div class="pair-only" hidden>
+            <label class="dropzone" data-slot="b"><span class="thumb">📷</span><span><b>Mentee photo</b><br>Click or drop an image</span><input type="file" accept="image/*"></label>
+            <button type="button" class="btn btn-ghost btn-small" data-clear="b" hidden style="margin-top:6px">Remove</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset><legend>Theme</legend><div class="swatches" id="swatches"></div></fieldset>
+      <fieldset>
+        <legend>Size</legend>
+        <div class="seg">
+          <label><input type="radio" name="format" value="badge"><span>Badge</span></label>
+          <label><input type="radio" name="format" value="square"><span>Square</span></label>
+          <label><input type="radio" name="format" value="story"><span>Story</span></label>
+        </div>
+        <p class="hint" style="margin:8px 0 0">Badge prints at 3.5″ × 2.25″. Square fits Instagram and LinkedIn posts; Story fits phone stories.</p>
+      </fieldset>
+      <fieldset><label class="lbl" for="f-cohort">Footer text</label><input id="f-cohort" type="text" maxlength="40"></fieldset>
+
+      <fieldset class="solo-only tap-fields" style="margin:0">
+        <legend>📲 ScholarTap digital card</legend>
+        <p class="hint">Optional. These appear only on your digital card, which people open by scanning your QR code.</p>
+        <div class="row">
+          <input id="f-email" type="email" maxlength="80" placeholder="Email" aria-label="Email for digital card">
+          <input id="f-linkedin" type="text" maxlength="120" placeholder="LinkedIn URL" aria-label="LinkedIn URL">
+        </div>
+        <input id="f-website" type="text" maxlength="120" placeholder="Website or lab page" aria-label="Website" style="margin-top:12px">
+        <label class="inline-check" style="margin-top:12px"><input type="checkbox" id="f-qr"> Print the QR code on my card</label>
+      </fieldset>
+    </form>
+
+    <div class="stage">
+      <div class="stage-box">
+        <div class="tilt"><canvas id="card-canvas" role="img" width="1050" height="675"></canvas><div class="glare"></div></div>
+      </div>
+      <div class="stage-actions">
+        <button type="button" class="btn btn-primary" id="btn-download">⬇ Download PNG</button>
+        <button type="button" class="btn btn-ghost" id="btn-copy">Copy image</button>
+        <button type="button" class="btn btn-ghost" id="btn-share" hidden>Share</button>
+        <button type="button" class="btn btn-ghost" id="btn-shuffle">🎲 Surprise me</button>
+      </div>
+      <div class="stage-actions">
+        <label class="inline-check" for="copies">Print</label>
+        <select id="copies" style="width:auto;padding:8px 12px"><option value="1">1 copy</option><option value="4">4 copies</option><option value="8" selected>8 copies</option><option value="10">10 copies</option></select>
+        <button type="button" class="btn btn-ghost" id="btn-print">🖨 Print sheet</button>
+      </div>
+      <div class="card tap-card">
+        <p class="eyebrow" style="margin-bottom:6px">ScholarTap</p>
+        <h3>Your digital card</h3>
+        <p class="hint">Share this link or let people scan the QR code. It opens your card on their phone with a one-tap "Save contact" button. Your details are stored inside the link itself, not on our server.</p>
+        <div id="tap-out" class="tap-out"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-foot"></footer>
+<script src="/cards.js"></script>
+<script>initStudio()</script>
+</body>
+</html>

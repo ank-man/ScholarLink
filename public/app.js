@@ -1,7 +1,22 @@
 // Shared front-end code for ScholarLink pages.
 const $ = (sel, root = document) => root.querySelector(sel)
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)]
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]))
+const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches
 
+// ---------- theme ----------
+const theme = {
+  get() { try { return localStorage.getItem("scholarlink-theme") } catch { return null } },
+  current() { return document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") },
+  toggle() {
+    const next = theme.current() === "dark" ? "light" : "dark"
+    document.documentElement.dataset.theme = next
+    try { localStorage.setItem("scholarlink-theme", next) } catch {}
+  },
+}
+if (theme.get()) document.documentElement.dataset.theme = theme.get()
+
+// ---------- saved personal links ----------
 const store = {
   get() { try { return JSON.parse(localStorage.getItem("scholarlink-links") || "[]") } catch { return [] } },
   add(entry) {
@@ -13,6 +28,64 @@ const store = {
   },
 }
 
+// Details handed to the name card studio. Kept in this browser only.
+const cardPrefill = {
+  set(data) { try { localStorage.setItem("scholarlink-card", JSON.stringify(data)) } catch {} },
+  take() {
+    try {
+      const d = JSON.parse(localStorage.getItem("scholarlink-card") || "null")
+      localStorage.removeItem("scholarlink-card")
+      return d
+    } catch { return null }
+  },
+}
+
+// ---------- header & footer ----------
+// Program branding. Change it here and it updates the header, footer, and home page.
+const PROGRAM = { initiative: "Bulldog Bridge", org: "UGA GSA", orgLong: "UGA Graduate Student Association" }
+const TAGLINE = `A ${PROGRAM.initiative} initiative from ${PROGRAM.org}`
+const NAV = [
+  ["mentee", "/mentee.html", "Find a mentor"],
+  ["mentor", "/mentor.html", "Become a mentor"],
+  ["help", "/help.html", "Application help"],
+  ["guide", "/guide.html", "Grad school guide"],
+  ["cards", "/cards.html", "Name cards", "new"],
+]
+const ICONS = {
+  menu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>`,
+  sun: `<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`,
+  moon: `<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`,
+}
+
+function renderHeader(page) {
+  const head = $(".site-head")
+  if (!head) return
+  const links = NAV.map(([key, href, label, cls]) =>
+    `<a href="${href}"${key === page ? ` aria-current="page"` : ""}${cls && key !== page ? ` class="${cls}"` : ""}>${label}</a>`).join("")
+  const mine = store.get()[0]
+  head.innerHTML = `<div class="wrap">
+    <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>${PROGRAM.initiative} · ${PROGRAM.org}</small></span></a>
+    <nav class="nav" id="nav">${links}${mine ? `<a class="mine" href="${esc(mine.url)}">My page</a>` : ""}</nav>
+    <button class="icon-btn theme-toggle" type="button" aria-label="Switch light or dark mode">${ICONS.sun}${ICONS.moon}</button>
+    <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav">${ICONS.menu}</button>
+  </div>`
+  if (!$(".ambient")) document.body.insertAdjacentHTML("afterbegin", `<div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>`)
+  $(".theme-toggle", head).onclick = theme.toggle
+  const toggle = $(".nav-toggle", head)
+  toggle.onclick = () => {
+    const open = $("#nav").classList.toggle("open")
+    toggle.setAttribute("aria-expanded", open)
+  }
+}
+
+function renderFooter() {
+  const f = $("footer.site-foot")
+  if (!f || f.childElementCount) return
+  f.innerHTML = `<div class="wrap"><span>ScholarLink is a <b>${PROGRAM.initiative}</b> initiative from the ${PROGRAM.orgLong} (GSA). Student-run; not an official University of Georgia website.</span>
+    <span class="foot-links"><a href="/guide.html">Grad school guide</a><a href="/cards.html">Name cards</a><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></span></div>`
+}
+
+// ---------- api ----------
 async function api(path, body) {
   const res = await fetch(`/api/${path}`, body ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) } : {})
   let data = {}
@@ -66,57 +139,142 @@ function linkBox(url) {
     <a class="btn btn-primary btn-small" href="${esc(url)}">Open my page</a></div>`
 }
 
+// A call-to-action that opens the name card studio with these details filled in.
+function cardCta(data, text = "Make your name card") {
+  return `<div class="card-cta"><div><b>${esc(text)} ✨</b><span>A shareable card for orientation, socials, or your door.</span></div>
+    <button type="button" class="btn btn-primary btn-small" data-card='${esc(JSON.stringify(data))}'>Open card studio <span class="arrow">→</span></button></div>`
+}
+
 document.addEventListener("click", async (e) => {
-  const b = e.target.closest("[data-copy]")
-  if (!b) return
-  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Copied ✓" } catch { b.textContent = "Select and copy" }
+  const copy = e.target.closest("[data-copy]")
+  if (copy) {
+    try { await navigator.clipboard.writeText(copy.dataset.copy); copy.textContent = "Copied ✓"; toast("Link copied") }
+    catch { copy.textContent = "Select and copy" }
+  }
+  const card = e.target.closest("[data-card]")
+  if (card) {
+    try { cardPrefill.set(JSON.parse(card.dataset.card)) } catch {}
+    location.href = "/cards.html"
+  }
 })
 
+// ---------- feedback & motion ----------
+function toast(text) {
+  let box = $(".toasts")
+  if (!box) { box = document.createElement("div"); box.className = "toasts"; box.setAttribute("role", "status"); document.body.appendChild(box) }
+  const t = document.createElement("div")
+  t.className = "toast"
+  t.textContent = text
+  box.appendChild(t)
+  setTimeout(() => t.remove(), 2600)
+}
+
+function confetti() {
+  if (reducedMotion()) return
+  const c = document.createElement("canvas")
+  c.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:90"
+  document.body.appendChild(c)
+  const ctx = c.getContext("2d")
+  const dpr = devicePixelRatio || 1
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr
+  ctx.scale(dpr, dpr)
+  const colors = ["#ba0c2f", "#f2b01e", "#ff5a73", "#6d5bff", "#22c1c3", "#ffffff"]
+  const bits = Array.from({ length: 180 }, () => ({
+    x: innerWidth / 2 + (Math.random() - .5) * 200, y: innerHeight * .35,
+    vx: (Math.random() - .5) * 16, vy: -Math.random() * 14 - 4,
+    r: Math.random() * Math.PI, vr: (Math.random() - .5) * .4,
+    w: 6 + Math.random() * 6, h: 8 + Math.random() * 8, c: colors[(Math.random() * colors.length) | 0],
+  }))
+  const start = performance.now()
+  ;(function frame(t) {
+    ctx.clearRect(0, 0, innerWidth, innerHeight)
+    for (const b of bits) {
+      b.vy += .35; b.vx *= .99; b.x += b.vx; b.y += b.vy; b.r += b.vr
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.r); ctx.fillStyle = b.c
+      ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h * Math.cos(b.r * 2)); ctx.restore()
+    }
+    if (t - start < 3500) requestAnimationFrame(frame); else c.remove()
+  })(start)
+}
+
+function countUp(el, to) {
+  const n = Number(to) || 0
+  if (reducedMotion() || n === 0) { el.textContent = n; return }
+  const start = performance.now(), dur = 1200
+  ;(function tick(t) {
+    const p = Math.min(1, (t - start) / dur)
+    el.textContent = Math.round(n * (1 - Math.pow(1 - p, 3)))
+    if (p < 1) requestAnimationFrame(tick)
+  })(start)
+}
+
+function reveal(root = document) {
+  const els = $$(".reveal:not(.in)", root)
+  if (!("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("in")); return }
+  const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+    if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target) }
+  }), { threshold: .12, rootMargin: "0px 0px -40px 0px" })
+  els.forEach((e) => io.observe(e))
+}
+
+// Show how much of the form is done: one step per fieldset with a required label.
+function formProgress(form) {
+  const groups = $$("fieldset", form).filter((f) => $(".req", f) || $("[required]", f))
+  if (!groups.length) return
+  form.insertAdjacentHTML("afterbegin", `<div class="form-progress" aria-hidden="true"><span>Progress</span><div class="meter"><span style="width:0"></span></div><b>0%</b></div>`)
+  const bar = $(".form-progress .meter span", form), label = $(".form-progress b", form)
+  const done = (f) => $$("input, select, textarea", f).some((el) =>
+    el.type === "checkbox" || el.type === "radio" ? el.checked : el.value.trim() !== "")
+  const update = () => {
+    const pct = Math.round((groups.filter(done).length / groups.length) * 100)
+    bar.style.width = pct + "%"
+    label.textContent = pct + "%"
+  }
+  form.addEventListener("input", update)
+  form.addEventListener("change", update)
+  update()
+}
+
 // Wire a registration form: populate, submit, show result.
-async function setupForm({ formId, endpoint, label, renderResult }) {
+async function setupForm({ formId, endpoint, label, renderResult, celebrate }) {
   const form = $("#" + formId)
   const msg = $("#form-msg")
   try { await populate(form) } catch (err) {
     msg.innerHTML = `<div class="alert alert-err">Couldn't load the form options. Please refresh. (${esc(err.message)})</div>`
     return
   }
+  formProgress(form)
   form.addEventListener("submit", async (e) => {
     e.preventDefault()
     msg.innerHTML = ""
     const btn = form.querySelector("button[type=submit]")
     btn.disabled = true
-    const old = btn.textContent
+    const old = btn.innerHTML
     btn.textContent = "Submitting…"
     try {
-      const res = await api(endpoint, collect(form))
+      const values = collect(form)
+      const res = await api(endpoint, values)
       const url = statusLink(res.id, res.token)
       store.add({ id: res.id, url, label, name: res.view.name })
       form.hidden = true
       const out = $("#result")
       out.hidden = false
-      out.innerHTML = renderResult(res.view, url)
+      out.innerHTML = renderResult(res.view, url, values)
       out.scrollIntoView({ behavior: "smooth", block: "start" })
+      if (!celebrate || celebrate(res.view)) confetti()
     } catch (err) {
       msg.innerHTML = `<div class="alert alert-err">${esc(err.message)}</div>`
       msg.scrollIntoView({ behavior: "smooth", block: "center" })
     } finally {
       btn.disabled = false
-      btn.textContent = old
+      btn.innerHTML = old
     }
   })
 }
 
+const initials = (name) => String(name || "").trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("") || "?"
+const avatar = (name, alt) => `<span class="avatar${alt ? " v2" : ""}" aria-hidden="true">${esc(initials(name))}</span>`
+
 const saveNote = `<p class="alert alert-warn"><b>Save this link.</b> It's your private page for seeing your match and logging meetings. Anyone with the link can see your page, so don't share it. We've also remembered it in this browser.</p>`
 
-// Show "My ScholarLink" in the nav if this browser has saved links.
-function markNav() {
-  const links = store.get()
-  const nav = $(".nav")
-  if (!nav || !links.length) return
-  const a = document.createElement("a")
-  a.href = links[0].url
-  a.className = "mine"
-  a.textContent = "My page"
-  nav.appendChild(a)
-}
-document.addEventListener("DOMContentLoaded", markNav)
+document.addEventListener("DOMContentLoaded", () => { renderFooter(); reveal() })
