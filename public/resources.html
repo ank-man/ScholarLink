@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mentor Resources · ScholarLink</title>
+<meta name="description" content="Resources for ScholarLink mentors and mentees: campus support, email templates, practice scenarios and the mentor commitments.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<meta name="theme-color" content="#ba0c2f">
+<script src="/app.js"></script>
+<script src="/training-data.js"></script>
+<style>
+  .rs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+  .rs-urgent { border-left: 6px solid var(--red); }
+  .rs-list { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 10px; }
+  .rs-list a { font-weight: 600; }
+  .rs-list small { display: block; color: var(--muted); }
+  .rs-tpl pre { white-space: pre-wrap; font: 14px/1.55 var(--font); background: var(--soft); border-radius: 12px; padding: 14px; margin: 10px 0; color: var(--ink); }
+  .rs-sc details { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; background: var(--card); }
+  .rs-sc summary { cursor: pointer; font-weight: 600; }
+  .rs-sc .resp { margin-top: 10px; padding: 12px 14px; border-radius: 10px; background: var(--ok-bg); color: var(--ink); }
+  section.wrap { margin: 40px auto; }
+  .rs-toc { display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<header class="site-head"></header><script>renderHeader("resources")</script>
+
+<main>
+  <div class="wrap page-head">
+    <p class="eyebrow">Resources</p>
+    <h1>Everything a mentor <span class="grad">needs to hand.</span></h1>
+    <p class="lede">Campus support to share, email templates to copy, practice scenarios with suggested responses, and the mentor commitments. New to mentoring? Start with the <a href="/training.html">mentor training</a>.</p>
+    <div class="rs-toc"><a class="btn btn-ghost btn-small" href="#help">Support</a><a class="btn btn-ghost btn-small" href="#templates">Email templates</a><a class="btn btn-ghost btn-small" href="#scenarios">Scenarios</a><a class="btn btn-ghost btn-small" href="#agenda">Meeting agendas</a><a class="btn btn-ghost btn-small" href="#code">Commitments</a></div>
+  </div>
+
+  <section class="wrap" id="help"><div class="section-head"><h2>Support to share</h2><p>Mentors connect students to help; they don't replace it.</p></div><div class="rs-grid" id="resGrid"></div></section>
+
+  <section class="wrap" id="templates"><div class="section-head"><h2>Email templates</h2><p>Copy, fill in the brackets, send.</p></div><div class="rs-grid" id="tplGrid"></div></section>
+
+  <section class="wrap" id="scenarios"><div class="section-head"><h2>Practice scenarios</h2><p>Think about what you'd do, then open the suggested response.</p></div><div class="rs-grid rs-sc" id="scGrid"></div></section>
+
+  <section class="wrap" id="agenda"><div class="section-head"><h2>Meeting agendas</h2><p>About 45 minutes each.</p></div>
+    <div class="rs-grid">
+      <div class="card"><h3>Meeting 1: getting to know each other</h3><ol><li>Welcome and introductions (5 min)</li><li>Their story (10 min)</li><li>Your story (10 min)</li><li>Their goals (10 min)</li><li>Expectations and confidentiality limits (5 min)</li><li>Next steps, one SMART goal, a date for Meeting 2 (5 min)</li></ol></div>
+      <div class="card"><h3>Meeting 2: guidance and next steps</h3><ol><li>How did the goal go? (5 min)</li><li>Their main question: research, grad school, careers or balance (20 min)</li><li>Feedback on a document, if they want it (10 min)</li><li>Resources and next steps (5 min)</li><li>Closing: how to stay in touch, then log and rate (5 min)</li></ol></div>
+    </div>
+  </section>
+
+  <section class="wrap" id="code"><div class="card"><h2 style="margin-top:0">Mentor commitments</h2><ol id="codeList"></ol><p><a class="btn btn-primary" href="/training.html">Take the training →</a></p></div></section>
+</main>
+
+<footer class="site-foot"></footer>
+<script>
+const T = window.TRAINING
+$("#resGrid").innerHTML = T.resources.map((g) => `<div class="card${g.group === "Urgent help" ? " rs-urgent" : ""}"><h3 style="margin:0">${esc(g.group)}</h3><ul class="rs-list">${g.items.map(([n, d, u]) => `<li><a href="${esc(u)}"${u.startsWith("http") ? ` target="_blank" rel="noopener"` : ""}>${esc(n)}</a><small>${esc(d)}</small></li>`).join("")}</ul></div>`).join("")
+$("#tplGrid").innerHTML = T.templates.map((t, i) => `<div class="card rs-tpl"><h3 style="margin:0">${esc(t.title)}</h3><pre id="tpl${i}">${esc(t.body)}</pre><button class="btn btn-ghost btn-small" type="button" data-copy="tpl${i}">Copy</button></div>`).join("")
+$("#scGrid").innerHTML = T.scenarios.map((s) => `<details><summary>${esc(s.title)}</summary><p>${esc(s.situation)}</p><div class="resp"><b>Suggested response.</b> ${esc(s.response)}</div></details>`).join("")
+$("#codeList").innerHTML = T.code.map((c) => `<li>${esc(c)}</li>`).join("")
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-copy]"); if (!b) return
+  try { await navigator.clipboard.writeText($("#" + b.dataset.copy).textContent); b.textContent = "Copied ✓"; setTimeout(() => (b.textContent = "Copy"), 1500) } catch { b.textContent = "Select and copy" }
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mentor Training · ScholarLink</title>
+<meta name="description" content="ScholarLink mentor training: seven short modules with videos and quizzes, and a certificate when you finish.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<meta name="theme-color" content="#ba0c2f">
+<script src="/app.js"></script>
+<script src="/training-data.js"></script>
+<style>
+  .tr-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 28px; align-items: start; margin: 8px 0 60px; }
+  @media (max-width: 860px) { .tr-layout { grid-template-columns: minmax(0, 1fr); } .tr-side { position: static !important; } }
+  .tr-side { position: sticky; top: 84px; display: grid; gap: 14px; }
+  .tr-progress { height: 10px; border-radius: 99px; background: var(--soft); overflow: hidden; }
+  .tr-progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--red), var(--red-2, #e8574b)); transition: width .5s var(--ease); }
+  .tr-mods { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .tr-mods button { width: 100%; text-align: left; display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 500 14px var(--font); cursor: pointer; }
+  .tr-mods button[aria-current="true"] { border-color: var(--red); box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 14%, transparent); }
+  .tr-mods .n { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--soft); color: var(--red); font-weight: 700; }
+  .tr-mods .done .n { background: var(--ok-bg); color: var(--ok); }
+  .tr-mods small { color: var(--muted); display: block; font-size: 12px; }
+  .tr-main h2 { font-family: var(--serif); font-size: clamp(26px, 4vw, 36px); margin: 4px 0 6px; }
+  .tr-main h3 { margin: 26px 0 8px; font-size: 18px; }
+  .tr-main p, .tr-main li { line-height: 1.6; }
+  .tr-main ul { padding-left: 20px; }
+  .tr-video { aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: #111; display: grid; place-items: center; color: #fff; margin: 16px 0; }
+  .tr-video iframe, .tr-video video { width: 100%; height: 100%; border: 0; }
+  .tr-video .ph { text-align: center; padding: 20px; font-size: 14px; opacity: .85; }
+  .tr-obj { background: var(--soft); border-radius: var(--radius-sm); padding: 14px 18px; }
+  .tr-obj b { color: var(--red); }
+  .tr-key { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .tr-quiz { margin-top: 28px; }
+  .tr-q { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px; margin: 12px 0; background: var(--card); }
+  .tr-q legend { font-weight: 600; padding: 0 4px; }
+  .tr-q label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: 400; }
+  .tr-q label:hover { background: var(--soft); }
+  .tr-q .why { margin: 8px 0 0; font-size: 14px; }
+  .tr-q.right { border-color: var(--ok); } .tr-q.wrong { border-color: var(--err); }
+  .tr-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .tr-cert { text-align: center; }
+  .tr-cert canvas { width: 100%; max-width: 720px; border-radius: 12px; box-shadow: var(--shadow-lg); margin: 16px auto; display: block; }
+  .tr-code li { margin: 6px 0; }
+  .tr-hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 18px 0 8px; }
+  .tr-hero div { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px; }
+  .tr-hero b { font-size: 24px; display: block; color: var(--red); }
+  @media print { .site-head, .site-foot, .tr-side, .tr-nav, .no-print { display: none !important; } .tr-layout { display: block; } }
+</style>
+</head>
+<body>
+<header class="site-head"></header><script>renderHeader("training")</script>
+
+<main class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Mentor training</p>
+    <h1>Be the mentor <span class="grad">you wish you'd had.</span></h1>
+    <p class="lede">Seven short modules with a video, key points and a three-question check. About an hour in total. Your progress saves on this device, and you get a certificate at the end.</p>
+    <div class="tr-hero">
+      <div><b id="hMods">7</b>modules</div>
+      <div><b id="hMin">60</b>minutes</div>
+      <div><b id="hDone">0</b>completed</div>
+      <div><b>80%</b>to pass each check</div>
+    </div>
+  </div>
+
+  <div class="tr-layout">
+    <aside class="tr-side" aria-label="Modules">
+      <div class="tr-progress" aria-hidden="true"><span id="bar"></span></div>
+      <ol class="tr-mods" id="mods"></ol>
+      <a class="btn btn-ghost btn-small" href="/resources.html">Resources, templates and scenarios →</a>
+    </aside>
+    <section class="tr-main" id="main" aria-live="polite"></section>
+  </div>
+</main>
+
+<footer class="site-foot"></footer>
+<script>
+const T = window.TRAINING
+const KEY = "scholarlink-training"
+const state = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}") } catch { return {} } })()
+state.passed ||= {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)) } catch {} }
+const doneCount = () => T.modules.filter((m) => state.passed[m.id]).length
+const allDone = () => doneCount() === T.modules.length
+let current = new URLSearchParams(location.search).get("m") || state.current || T.modules[0].id
+
+$("#hMods").textContent = T.modules.length
+$("#hMin").textContent = T.modules.reduce((a, m) => a + m.minutes, 0)
+
+function renderSide() {
+  $("#mods").innerHTML = T.modules.map((m) => `<li><button type="button" data-m="${m.id}" class="${state.passed[m.id] ? "done" : ""}" aria-current="${m.id === current}">
+    <span class="n">${state.passed[m.id] ? "✓" : m.n}</span><span>${esc(m.title)}<small>${m.minutes} min</small></span></button></li>`).join("") +
+    `<li><button type="button" data-m="certificate" aria-current="${current === "certificate"}"><span class="n">★</span><span>Certificate<small>${allDone() ? "Ready" : "After all modules"}</small></span></button></li>`
+  $("#bar").style.width = (doneCount() / T.modules.length) * 100 + "%"
+  $("#hDone").textContent = doneCount()
+}
+
+function video(m) {
+  if (m.video) return `<div class="tr-video"><iframe src="https://www.youtube-nocookie.com/embed/${esc(m.video)}" title="${esc(m.title)} video" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
+  return `<div class="tr-video"><div class="ph">🎬 Video for this module<br><small>Coming soon. Read the module below in the meantime.</small></div></div>`
+}
+
+function renderModule(m) {
+  const i = T.modules.indexOf(m), prev = T.modules[i - 1], next = T.modules[i + 1]
+  $("#main").innerHTML = `
+    <p class="eyebrow">Module ${m.n} of ${T.modules.length} · ${m.minutes} minutes</p>
+    <h2>${esc(m.title)}</h2>
+    <p class="lede" style="margin-top:0">${esc(m.summary)}</p>
+    ${video(m)}
+    <div class="tr-obj"><b>You'll be able to:</b><ul>${m.objectives.map((o) => `<li>${esc(o)}</li>`).join("")}</ul></div>
+    ${m.sections.map((s) => `<h3>${esc(s.h)}</h3>${(s.p || []).map((p) => `<p>${esc(p)}</p>`).join("")}${s.list ? `<ul>${s.list.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}`).join("")}
+    <h3>Key points</h3><div class="tr-key">${m.keyPoints.map((k) => `<span class="tag">${esc(k)}</span>`).join("")}</div>
+    <form class="tr-quiz" id="quiz"><h3>Check your understanding</h3>
+      ${m.quiz.map((q, qi) => `<fieldset class="tr-q" data-q="${qi}"><legend>${qi + 1}. ${esc(q.q)}</legend>
+        ${q.options.map((o, oi) => `<label><input type="radio" name="q${qi}" value="${oi}" required> <span>${esc(o)}</span></label>`).join("")}
+        <p class="why" hidden></p></fieldset>`).join("")}
+      <div id="qResult"></div>
+      <button class="btn btn-primary" type="submit">Check my answers</button>
+    </form>
+    <div class="tr-nav">${prev ? `<button class="btn btn-ghost" data-m="${prev.id}">← ${esc(prev.title)}</button>` : "<span></span>"}
+      ${next ? `<button class="btn btn-ghost" data-m="${next.id}">${esc(next.title)} →</button>` : `<button class="btn btn-ghost" data-m="certificate">Certificate →</button>`}</div>`
+  $("#quiz").onsubmit = (e) => {
+    e.preventDefault()
+    let right = 0
+    m.quiz.forEach((q, qi) => {
+      const fs = $(`[data-q="${qi}"]`), v = Number(new FormData(e.target).get("q" + qi))
+      const ok = v === q.answer; if (ok) right++
+      fs.classList.toggle("right", ok); fs.classList.toggle("wrong", !ok)
+      const why = $(".why", fs); why.hidden = false
+      why.innerHTML = `${ok ? "✅ Correct." : `❌ The best answer is “${esc(q.options[q.answer])}”.`} ${esc(q.why)}`
+    })
+    const pass = right / m.quiz.length >= T.passMark
+    if (pass) { state.passed[m.id] = new Date().toISOString(); save(); renderSide() }
+    $("#qResult").innerHTML = pass
+      ? `<div class="alert alert-ok">You got ${right} of ${m.quiz.length}. Module complete! ${next ? `<a href="#" data-m="${next.id}">Next: ${esc(next.title)} →</a>` : allDone() ? `<a href="#" data-m="certificate">Get your certificate →</a>` : ""}</div>`
+      : `<div class="alert alert-warn">You got ${right} of ${m.quiz.length}. Read the explanations and try again.</div>`
+  }
+}
+
+function renderCertificate() {
+  if (!allDone()) {
+    const left = T.modules.filter((m) => !state.passed[m.id])
+    $("#main").innerHTML = `<p class="eyebrow">Certificate</p><h2>Almost there</h2><p>Finish these modules to unlock your certificate:</p>
+      <ul>${left.map((m) => `<li><a href="#" data-m="${m.id}">Module ${m.n}: ${esc(m.title)}</a></li>`).join("")}</ul>`
+    return
+  }
+  $("#main").innerHTML = `<div class="tr-cert">
+    <p class="eyebrow">Certificate</p><h2>You're ready to mentor 🎉</h2>
+    <form id="certForm" class="no-print" style="max-width:520px;margin:0 auto;text-align:left">
+      <h3>ScholarLink mentor commitments</h3>
+      <ol class="tr-code">${T.code.map((c) => `<li>${esc(c)}</li>`).join("")}</ol>
+      <label><input type="checkbox" id="agree" required ${state.agreed ? "checked" : ""}> I agree to these commitments.</label>
+      <label for="certName" style="display:block;margin-top:12px">Name for your certificate</label>
+      <input type="text" id="certName" required autocomplete="name" value="${esc(state.name || "")}" placeholder="Your full name">
+      <div class="actions" style="margin-top:14px"><button class="btn btn-primary" type="submit">Make my certificate</button></div>
+    </form>
+    <canvas id="cert" width="1600" height="1130" hidden></canvas>
+    <div class="actions no-print" id="certActions" hidden style="justify-content:center">
+      <a class="btn btn-primary" id="certPng" download="ScholarLink-mentor-certificate.png">Download PNG</a>
+      <button class="btn btn-ghost" type="button" onclick="print()">Print</button>
+      <a class="btn btn-ghost" href="/mentor.html">Sign up as a mentor →</a>
+    </div></div>`
+  $("#certForm").onsubmit = (e) => {
+    e.preventDefault()
+    state.name = $("#certName").value.trim(); state.agreed = true; state.certified ||= new Date().toISOString(); save()
+    drawCert(state.name, new Date(state.certified))
+  }
+  if (state.agreed && state.name) drawCert(state.name, new Date(state.certified))
+}
+
+function drawCert(name, when) {
+  const c = $("#cert"), x = c.getContext("2d"), W = c.width, H = c.height
+  x.fillStyle = "#fffdf9"; x.fillRect(0, 0, W, H)
+  x.fillStyle = "#ba0c2f"; x.fillRect(0, 0, W, 26); x.fillRect(0, H - 26, W, 26)
+  x.strokeStyle = "#ba0c2f"; x.lineWidth = 4; x.strokeRect(60, 70, W - 120, H - 140)
+  x.strokeStyle = "#000"; x.lineWidth = 1.5; x.strokeRect(76, 86, W - 152, H - 172)
+  x.textAlign = "center"; x.fillStyle = "#ba0c2f"; x.font = "700 30px Inter, sans-serif"
+  x.fillText("SCHOLARLINK  ·  BULLDOG BRIDGE  ·  UGA GSA", W / 2, 190)
+  x.fillStyle = "#111"; x.font = "600 84px Fraunces, Georgia, serif"; x.fillText("Certificate of Completion", W / 2, 320)
+  x.font = "400 32px Inter, sans-serif"; x.fillStyle = "#555"; x.fillText("This certifies that", W / 2, 420)
+  x.font = "italic 600 96px Fraunces, Georgia, serif"; x.fillStyle = "#ba0c2f"; x.fillText(name, W / 2, 540, W - 300)
+  x.fillStyle = "#111"; x.fillRect(W / 2 - 360, 570, 720, 2)
+  x.font = "400 32px Inter, sans-serif"; x.fillStyle = "#333"
+  x.fillText(`completed ScholarLink Mentor Training (${T.modules.length} modules) and agreed to the`, W / 2, 650)
+  x.fillText("ScholarLink mentor commitments.", W / 2, 696)
+  x.font = "600 30px Inter, sans-serif"; x.fillStyle = "#111"
+  x.fillText(when.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), W / 2 - 380, 880)
+  x.fillText(`Training version ${T.version}`, W / 2 + 380, 880)
+  x.font = "400 22px Inter, sans-serif"; x.fillStyle = "#666"; x.fillText("Date", W / 2 - 380, 916); x.fillText("Program", W / 2 + 380, 916)
+  x.font = "400 20px Inter, sans-serif"; x.fillStyle = "#888"
+  x.fillText("Developed by Ankush Sharma at the University of Georgia. Student-run; not an official University of Georgia credential.", W / 2, 1010)
+  c.hidden = false; $("#certActions").hidden = false
+  $("#certPng").href = c.toDataURL("image/png")
+}
+
+function show(id) {
+  current = id; state.current = id; save()
+  renderSide()
+  if (id === "certificate") renderCertificate()
+  else renderModule(T.modules.find((m) => m.id === id) || T.modules[0])
+  history.replaceState(null, "", "?m=" + id)
+}
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-m]"); if (!b) return
+  e.preventDefault(); show(b.dataset.m)
+  if (b.closest(".tr-nav, .alert, .tr-main")) $("#main").scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" })
+})
+show(current)
+</script>
+</body>
+</html>

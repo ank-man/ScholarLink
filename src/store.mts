@@ -60,7 +60,40 @@ async function readFile(path: string, ref: string): Promise<any> {
   return JSON.parse(await res.text())
 }
 
+// LOCAL_DATA_DIR: keep the JSON files in a local folder instead of GitHub (local development, or any
+// small server). Same files, same format; writes are serialized in-process.
+const localDir = () => getEnv("LOCAL_DATA_DIR")
+async function localLoad(keys: Key[]): Promise<{ sha: string; data: Data }> {
+  const { readFile: rf } = await import("node:fs/promises")
+  const { join } = await import("node:path")
+  const data = {} as Data
+  for (const k of keys) {
+    try { data[k] = JSON.parse(await rf(join(localDir()!, FILES[k]), "utf8")) } catch { data[k] = k === "config" ? null : [] }
+  }
+  if (keys.includes("config") && !data.config) throw new Error(`config.json is missing from ${localDir()}`)
+  return { sha: "local", data }
+}
+let localQueue: Promise<unknown> = Promise.resolve()
+async function localTransact<T>(keys: Key[], fn: (data: Data) => TxResult<T>): Promise<T> {
+  const run = async () => {
+    const { writeFile, rename } = await import("node:fs/promises")
+    const { join } = await import("node:path")
+    const { data } = await localLoad(keys)
+    const out = fn(data)
+    for (const [k, v] of Object.entries(out.changes || {})) {
+      const file = join(localDir()!, FILES[k as Key])
+      await writeFile(file + ".tmp", JSON.stringify(v, null, 2) + "\n")
+      await rename(file + ".tmp", file)
+    }
+    return out.result
+  }
+  const p = localQueue.then(run, run)
+  localQueue = p.catch(() => {})
+  return p
+}
+
 export async function load(keys: Key[]): Promise<{ sha: string; data: Data }> {
+  if (localDir()) return localLoad(keys)
   const sha = await headSha()
   const data = {} as Data
   await Promise.all(
@@ -108,6 +141,7 @@ async function commit(parent: string, changes: Changes, message: string): Promis
 
 // Read the files, let `fn` change them, and commit. Retries when another write lands first.
 export async function transact<T>(keys: Key[], fn: (data: Data) => TxResult<T>): Promise<T> {
+  if (localDir()) return localTransact(keys, fn)
   for (let attempt = 0; attempt < 5; attempt++) {
     const { sha, data } = await load(keys)
     const out = fn(data)

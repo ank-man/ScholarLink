@@ -19,6 +19,8 @@ and a departmental **GSA Mentor Lead** oversees matches in each pilot department
 | `/cards.html` | Name Card Studio: mentor, mentee, and match cards in 6 themes and 3 sizes (badge, square, story). Download PNG, copy, share, or print a badge sheet. Runs entirely in the browser |
 | `/cv.html` | CV Maker: academic CV builder with 3 templates, live preview, page count, PDF (print) and Word export, plain-text copy, backup/restore. Drafts stay in the browser |
 | `/funding.html` | Funding Finder: searchable archive of fellowships, grants, and scholarships by major, stage, and citizenship, plus Funding 101 and a guide for international students. Data lives in `public/funding-data.js` (review it each fall) |
+| `/training.html` | Mentor training: 7 short modules (video, key points, 3-question check, 80% to pass), progress saved on the device, mentor commitments and a downloadable certificate. Content lives in `public/training-data.js`; paste YouTube IDs into each module's `video` |
+| `/resources.html` | Mentor resources: campus and crisis support, copyable email templates, practice scenarios with suggested responses, meeting agendas, mentor commitments |
 | `/tap.html` | ScholarTap digital card: a phone-friendly profile opened from a link or QR code, with "Save contact". The details live in the link itself (after `#`), never on the server |
 
 ### How matching works
@@ -60,7 +62,9 @@ Hosted on Netlify. Environment variables:
 | `DATA_REPO` | `owner/ScholarLink-data` |
 | `DATA_BRANCH` | optional, defaults to `main` |
 
-Local development: `netlify dev` (with those variables set).
+Local development: `netlify dev` (with those variables set), or with nothing to install:
+`node dev.mjs` serves the site and API on http://localhost:8888 and keeps data as JSON files in `local-data/`
+(set `LOCAL_DATA_DIR` to change it). The same command runs ScholarLink on any small server if Netlify isn't an option.
 
 ### Safety
 
@@ -74,3 +78,7 @@ Local development: `netlify dev` (with those variables set).
 The original offline pilot tools are still here:
 [`ScholarLink_Pilot.xlsx`](ScholarLink_Pilot.xlsx) (matching and tracking workbook) and
 [`ScholarLink_Form_Questions.md`](ScholarLink_Form_Questions.md) (Google/Microsoft Forms questions).
+
+## Credits
+
+Developed by Ankush Sharma at the University of Georgia, for Bulldog Bridge (UGA GSA).

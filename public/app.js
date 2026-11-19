@@ -48,12 +48,14 @@ const NAV = [
   ["mentee", "/mentee.html", "Find a mentor"],
   ["mentor", "/mentor.html", "Become a mentor"],
   ["help", "/help.html", "Application help"],
+  ["training", "/training.html", "Mentor training"],
 ]
 const TOOLS = [
   ["guide", "/guide.html", "Grad school guide", "🧭", "Timeline, cold emails, checklist"],
   ["funding", "/funding.html", "Funding finder", "💰", "Fellowships and grants by field", "new"],
   ["cv", "/cv.html", "CV maker", "📄", "Academic CV in minutes", "new"],
   ["cards", "/cards.html", "Name cards", "🪪", "Cards and ScholarTap"],
+  ["resources", "/resources.html", "Mentor resources", "🧰", "Support, templates, scenarios", "new"],
 ]
 const ICONS = {
   menu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>`,
@@ -97,8 +99,8 @@ function renderHeader(page) {
 function renderFooter() {
   const f = $("footer.site-foot")
   if (!f || f.childElementCount) return
-  f.innerHTML = `<div class="wrap"><span>ScholarLink is a <b>${PROGRAM.initiative}</b> initiative from the ${PROGRAM.orgLong} (GSA). Student-run; not an official University of Georgia website.</span>
-    <span class="foot-links"><a href="/guide.html">Grad school guide</a><a href="/funding.html">Funding finder</a><a href="/cv.html">CV maker</a><a href="/cards.html">Name cards</a><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></span></div>`
+  f.innerHTML = `<div class="wrap"><span>ScholarLink is a <b>${PROGRAM.initiative}</b> initiative from the ${PROGRAM.orgLong} (GSA). Student-run; not an official University of Georgia website. Developed by <b>Ankush Sharma</b> at the University of Georgia.</span>
+    <span class="foot-links"><a href="/training.html">Mentor training</a><a href="/resources.html">Resources</a><a href="/guide.html">Grad school guide</a><a href="/funding.html">Funding finder</a><a href="/cv.html">CV maker</a><a href="/cards.html">Name cards</a><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></span></div>`
 }
 
 // ---------- api ----------
