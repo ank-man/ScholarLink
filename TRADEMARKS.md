@@ -6,7 +6,7 @@ are not covered by that license. They belong to Ankush Sharma, who reserves them
 You may:
 
 - say truthfully that your card, fork or service is "built on ScholarLink" or "compatible with ScholarLink";
-- keep the "Developed by Ankush Sharma · University of Georgia" creditshown in every page footer.
+- keep the "Developed by Ankush Sharma · University of Georgia" credit shown in every page footer.
 
 Without written permission you may not:
 
