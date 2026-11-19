@@ -89,6 +89,13 @@ The original offline pilot tools are still here:
   `node admin-user.mjs --email you@uga.edu --name "Your Name"` and add the printed entry to `admins.json` in the data repository.
   Mentor Leads: `--role lead --dept "Genetics"`, or add them from the dashboard's Admin accounts tab.
 
+## License, governance and training
+
+- Code: MIT (`LICENSE`). The ScholarLink name and logo: `TRADEMARKS.md`. Contributions: `CONTRIBUTING.md`.
+- Ownership, decisions, data stewardship and what happens if ScholarLink becomes a company: `docs/GOVERNANCE.md`;
+  a draft memorandum of understanding with GSA: `docs/AGREEMENT-TEMPLATE.md`.
+- Mentor training content is in `public/training-data.js` (page, handbook, slides and videos all come from it).
+
 ## Credits
 
 Developed by Ankush Sharma at the University of Georgia, for Bulldog Bridge (UGA GSA).
