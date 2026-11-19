@@ -7,6 +7,8 @@ export const FILES = {
   mentees: "mentees.json",
   matches: "matches.json",
   help: "help-requests.json",
+  admins: "admins.json",
+  audit: "audit.json",
 } as const
 
 export type Key = keyof typeof FILES

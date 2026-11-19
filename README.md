@@ -21,6 +21,8 @@ and a departmental **GSA Mentor Lead** oversees matches in each pilot department
 | `/funding.html` | Funding Finder: searchable archive of fellowships, grants, and scholarships by major, stage, and citizenship, plus Funding 101 and a guide for international students. Data lives in `public/funding-data.js` (review it each fall) |
 | `/training.html` | Mentor training: 7 short modules (video, key points, 3-question check, 80% to pass), progress saved on the device, mentor commitments and a downloadable certificate. Content lives in `public/training-data.js`; paste YouTube IDs into each module's `video` |
 | `/resources.html` | Mentor resources: campus and crisis support, copyable email templates, practice scenarios with suggested responses, meeting agendas, mentor commitments |
+| `/login.html` | Sign-in with email and password for mentors, students and help requesters (they set a password from their private page; the private link keeps working) |
+| `/admin.html` | Admin sign-in and program monitor: totals, funnel, 12-week activity, per-department capacity, alerts (students waiting, no first meeting after 21 days, second meeting overdue after 56, low ratings, unassigned help, mentors without training), matches, people, help requests, activity log, CSV export; actions to run matching, rematch, end matches, withdraw/reinstate, issue new private links, set Mentor Leads, manage accounts. Administrators see everything; Mentor Leads see only their departments |
 | `/tap.html` | ScholarTap digital card: a phone-friendly profile opened from a link or QR code, with "Save contact". The details live in the link itself (after `#`), never on the server |
 
 ### How matching works
@@ -78,6 +80,14 @@ Local development: `netlify dev` (with those variables set), or with nothing to 
 The original offline pilot tools are still here:
 [`ScholarLink_Pilot.xlsx`](ScholarLink_Pilot.xlsx) (matching and tracking workbook) and
 [`ScholarLink_Form_Questions.md`](ScholarLink_Form_Questions.md) (Google/Microsoft Forms questions).
+
+## Sign-in and admin accounts
+
+- Set `SESSION_SECRET` (any random string of 16+ characters) in the site settings. Sessions are signed with it; users stay signed in for 30 days, admins for 1 day.
+- Passwords are stored as salted scrypt hashes. Sign-in attempts are rate-limited, and every admin sign-in and action is written to `audit.json`.
+- First administrator: set `ADMIN_SETUP_CODE` and open `/admin.html` (the setup form appears only while no admin exists), or run
+  `node admin-user.mjs --email you@uga.edu --name "Your Name"` and add the printed entry to `admins.json` in the data repository.
+  Mentor Leads: `--role lead --dept "Genetics"`, or add them from the dashboard's Admin accounts tab.
 
 ## Credits
 

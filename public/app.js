@@ -74,7 +74,7 @@ function renderHeader(page) {
   const mine = store.get()[0]
   head.innerHTML = `<div class="wrap">
     <a class="brand" href="/"><span class="brand-mark">S</span><span>ScholarLink<small>${PROGRAM.initiative} · ${PROGRAM.org}</small></span></a>
-    <nav class="nav" id="nav">${links}${tools}${mine ? `<a class="mine" href="${esc(mine.url)}">My page</a>` : ""}</nav>
+    <nav class="nav" id="nav">${links}${tools}${session.get() ? `<a class="mine" href="/status.html">My page</a>` : mine ? `<a class="mine" href="${esc(mine.url)}">My page</a>` : `<a class="mine" href="/login.html"${page === "login" ? ` aria-current="page"` : ""}>Sign in</a>`}</nav>
     <button class="icon-btn theme-toggle" type="button" aria-label="Switch light or dark mode">${ICONS.sun}${ICONS.moon}</button>
     <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav">${ICONS.menu}</button>
   </div>`
@@ -100,15 +100,24 @@ function renderFooter() {
   const f = $("footer.site-foot")
   if (!f || f.childElementCount) return
   f.innerHTML = `<div class="wrap"><span>ScholarLink is a <b>${PROGRAM.initiative}</b> initiative from the ${PROGRAM.orgLong} (GSA). Student-run; not an official University of Georgia website. Developed by <b>Ankush Sharma</b> at the University of Georgia.</span>
-    <span class="foot-links"><a href="/training.html">Mentor training</a><a href="/resources.html">Resources</a><a href="/guide.html">Grad school guide</a><a href="/funding.html">Funding finder</a><a href="/cv.html">CV maker</a><a href="/cards.html">Name cards</a><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></span></div>`
+    <span class="foot-links"><a href="/training.html">Mentor training</a><a href="/resources.html">Resources</a><a href="/guide.html">Grad school guide</a><a href="/funding.html">Funding finder</a><a href="/cv.html">CV maker</a><a href="/cards.html">Name cards</a><a href="/login.html">Sign in</a><a href="/admin.html">Admin</a><a href="https://github.com/ank-man/ScholarLink">Source on GitHub</a></span></div>`
 }
 
 // ---------- api ----------
-async function api(path, body) {
-  const res = await fetch(`/api/${path}`, body ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) } : {})
+// Signed-in sessions: "user" (mentors, students, help requests) and "admin" (admins and Mentor Leads).
+const session = {
+  key: (k) => (k === "admin" ? "scholarlink-admin" : "scholarlink-session"),
+  get(k = "user") { try { return localStorage.getItem(session.key(k)) || "" } catch { return "" } },
+  set(k, v) { try { localStorage.setItem(session.key(k), v) } catch {} },
+  clear(k = "user") { try { localStorage.removeItem(session.key(k)) } catch {} },
+}
+
+async function api(path, body, auth) {
+  const headers = { ...(body ? { "content-type": "application/json" } : {}), ...(auth ? { authorization: "Bearer " + auth } : {}) }
+  const res = await fetch(`/api/${path}`, body ? { method: "POST", headers, body: JSON.stringify(body) } : { headers })
   let data = {}
   try { data = await res.json() } catch {}
-  if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.")
+  if (!res.ok) { const e = new Error(data.error || "Something went wrong. Please try again."); e.status = res.status; throw e }
   return data
 }
 

@@ -246,7 +246,7 @@ fieldset { border: 0; padding: 0; margin: 0 0 24px; min-width: 0; }
 legend, label.lbl { font-weight: 600; font-size: 15px; display: block; margin-bottom: 8px; padding: 0; }
 .hint { color: var(--muted); font-size: 13px; margin: -4px 0 10px; }
 .req::after { content: " *"; color: var(--red); }
-input[type=text], input[type=email], input[type=search], input[type=date], input[type=number], select, textarea {
+input[type=text], input[type=password], input[type=email], input[type=search], input[type=date], input[type=number], select, textarea {
   width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; font: 15px var(--font);
   background: var(--bg); color: var(--ink); transition: border-color .2s, box-shadow .2s, background .2s;
 }

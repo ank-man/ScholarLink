@@ -101,25 +101,51 @@ function render(v) {
       (v.status !== "Resolved" ? `<div class="tools"><button class="btn btn-ghost btn-small" data-act="resolveHelp">My question is answered, close this request</button></div>` : `<p>This request is closed. Need more help? <a href="/help.html">Open a new request</a>.</p>`) +
       `</div><p class="form-note">While you wait, read the <a href="/guide.html">grad school application guide</a>.</p>`
   }
-  $("#content").innerHTML = html
+  $("#content").innerHTML = html + account(v)
 }
 
+// Sign-in with email and password, as well as the private link.
+function account(v) {
+  const training = v.role === "mentor" ? `<div class="card" style="margin-top:18px"><h3 style="margin-top:0">Mentor training</h3>${v.trainedAt
+    ? `<p>✅ Completed ${fmt(v.trainedAt.slice(0, 10))}. <a href="/training.html">Review the modules</a></p>`
+    : `<p>Please complete the <a href="/training.html">mentor training</a> (about an hour) before your first meeting. When you finish, it's recorded here automatically.</p><a class="btn btn-primary btn-small" href="/training.html">Start training →</a>`}</div>` : ""
+  return training + `<div class="card" style="margin-top:18px"><h3 style="margin-top:0">Sign-in</h3>
+    <p class="form-note" style="margin-top:0">${v.hasPassword ? `You can sign in at <a href="/login.html">Sign in</a> with <b>${esc(v.email || "")}</b> and your password, or with your private link.` : `Set a password to sign in from any device with <b>${esc(v.email || "")}</b>, without needing this link.`}</p>
+    <form id="pwForm" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+      <label style="flex:1;min-width:220px">${v.hasPassword ? "New password" : "Password"} <small>(10+ characters)</small><input type="password" id="pw" minlength="10" autocomplete="new-password" required></label>
+      <button class="btn btn-ghost" type="submit">${v.hasPassword ? "Change password" : "Set password"}</button>
+    </form>${SESSION ? `<p style="margin-bottom:0"><button class="btn btn-ghost btn-small" type="button" id="signOut">Sign out</button></p>` : ""}</div>`
+}
+
+const SESSION = !(ID && TOKEN) && session.get()
+const send = (body) => SESSION ? api("me/update", body, SESSION) : api("update", { id: ID, token: TOKEN, ...body })
+document.addEventListener("submit", async (e) => {
+  if (e.target.id !== "pwForm") return
+  e.preventDefault()
+  try { const r = await send({ action: "setPassword", password: $("#pw").value }); render(r.view); toast("Password saved ✓") }
+  catch (err) { $("#msg").innerHTML = `<div class="alert alert-err">${esc(err.message)}</div>` }
+})
+document.addEventListener("click", (e) => { if (e.target.id === "signOut") { session.clear(); location.href = "/login.html" } })
+
 async function load() {
-  if (!ID || !TOKEN) { $("#sub").textContent = ""; $("#msg").innerHTML = `<div class="alert alert-err">This page needs your personal link. Use the link you saved when you signed up.</div>`; return }
-  try { render(await api(`status?id=${encodeURIComponent(ID)}&t=${encodeURIComponent(TOKEN)}`)) }
-  catch (e) { $("#sub").textContent = ""; $("#msg").innerHTML = `<div class="alert alert-err">${esc(e.message)}</div>` }
+  if (!(ID && TOKEN) && !SESSION) { $("#sub").textContent = ""; $("#msg").innerHTML = `<div class="alert alert-err">Please <a href="/login.html">sign in</a>, or open the private link you saved when you signed up.</div>`; return }
+  try { render(SESSION ? await api("me", null, SESSION) : await api(`status?id=${encodeURIComponent(ID)}&t=${encodeURIComponent(TOKEN)}`)) }
+  catch (e) {
+    if (SESSION && e.status === 401) { session.clear(); location.href = "/login.html?expired=1"; return }
+    $("#sub").textContent = ""; $("#msg").innerHTML = `<div class="alert alert-err">${esc(e.message)}</div>`
+  }
 }
 
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("[data-act]")
   if (!b) return
-  const body = { id: ID, token: TOKEN, action: b.dataset.act, matchId: b.dataset.match, helpId: b.dataset.help }
+  const body = { action: b.dataset.act, matchId: b.dataset.match, helpId: b.dataset.help }
   if (body.action === "meeting") { body.which = Number(b.dataset.which); body.date = $("#d-" + b.dataset.match).value }
   if (body.action === "rate") body.rating = Number(b.dataset.rating)
   b.disabled = true
   $("#msg").innerHTML = ""
   try {
-    render((await api("update", body)).view)
+    render((await send(body)).view)
     toast("Saved ✓")
     if (body.action === "meeting" && body.which === 2) confetti()
   }

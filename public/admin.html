@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin · ScholarLink</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ba0c2f'/><text x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='20' fill='white'>S</text></svg>">
+<meta name="theme-color" content="#ba0c2f">
+<script src="/app.js"></script>
+<style>
+  .ad-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin: 0 0 18px; }
+  .ad-bar .who { color: var(--muted); font-size: 14px; }
+  .ad-tabs { display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .ad-tabs button { border: 0; background: none; padding: 10px 14px; font: 600 14px var(--font); color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; }
+  .ad-tabs button[aria-selected="true"] { color: var(--red); border-color: var(--red); }
+  .ad-tabs .n { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 4px; border-radius: 99px; background: var(--soft); color: var(--red); font-size: 12px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .kpi b { display: block; font-size: 28px; line-height: 1.1; }
+  .kpi span { color: var(--muted); font-size: 13px; }
+  .kpi small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .two { grid-template-columns: minmax(0, 1fr); } }
+  .hbar { display: grid; grid-template-columns: 140px minmax(0, 1fr) 44px; gap: 10px; align-items: center; margin: 8px 0; font-size: 14px; }
+  .hbar i { display: block; height: 14px; border-radius: 4px; background: var(--red); min-width: 2px; }
+  .hbar em { font-style: normal; text-align: right; font-variant-numeric: tabular-nums; }
+  .weeks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; align-items: end; height: 150px; margin-top: 10px; }
+  .weeks div { display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; height: 100%; }
+  .weeks i { display: block; border-radius: 3px 3px 0 0; }
+  .weeks .s { background: var(--red); } .weeks .m { background: #6b7280; }
+  .wlab { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; font-size: 11px; color: var(--muted); text-align: center; margin-top: 4px; }
+  .legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--card); }
+  table.ad { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.ad th, table.ad td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.ad th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: var(--soft); position: sticky; top: 0; }
+  table.ad td small { display: block; color: var(--muted); }
+  table.ad tr:last-child td { border-bottom: 0; }
+  .num { text-align: right !important; font-variant-numeric: tabular-nums; }
+  .lvl { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; }
+  .lvl.high { background: var(--err-bg); color: var(--err); } .lvl.medium { background: var(--warn-bg); color: var(--warn); } .lvl.low { background: var(--soft); color: var(--muted); }
+  .flag { color: var(--err); font-weight: 600; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; align-items: center; }
+  .filters input, .filters select { max-width: 260px; }
+  .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .acts .btn { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  .auth-card { max-width: 440px; margin: 10px auto 60px; }
+  .auth-card label { display: block; margin-top: 12px; font-weight: 600; font-size: 14px; }
+  .auth-card input, .auth-card select { width: 100%; margin-top: 6px; }
+  dialog { border: 0; border-radius: var(--radius); padding: 24px; max-width: 520px; width: calc(100% - 32px); background: var(--card); color: var(--ink); box-shadow: var(--shadow-lg); }
+  dialog::backdrop { background: rgba(0, 0, 0, .4); }
+  dialog label { display: block; margin-top: 10px; font-weight: 600; font-size: 14px; }
+  dialog input, dialog select { width: 100%; margin-top: 6px; }
+  .linkbox { word-break: break-all; background: var(--soft); padding: 10px 12px; border-radius: 10px; font-size: 13px; }
+</style>
+</head>
+<body>
+<header class="site-head"></header><script>renderHeader("admin")</script>
+<main class="wrap" id="app" style="margin-bottom:60px"></main>
+<footer class="site-foot"></footer>
+<dialog id="dlg"></dialog>
+<script>
+let S = session.get("admin"), O = null, TAB = "overview"
+const fmtD = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00" : d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "")
+const fmtT = (d) => (d ? new Date(d).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "")
+const pct = (a, b) => (b ? Math.round((a / b) * 100) + "%" : "–")
+const stars = (r) => (r ? "★".repeat(r) + "☆".repeat(5 - r) : "–")
+const msg = (t, kind = "ok") => { $("#msg").innerHTML = t ? `<div class="alert alert-${kind}">${esc(t)}</div>` : "" }
+
+// ---------- sign-in ----------
+async function showLogin(note) {
+  let setup = {}
+  try { setup = await api("admin/setup") } catch {}
+  const first = setup.needsSetup && setup.setupEnabled
+  $("#app").innerHTML = `<div class="page-head"><p class="eyebrow">Admin</p><h1>ScholarLink <span class="grad">admin</span></h1>
+    <p class="lede">For GSA program coordinators and departmental Mentor Leads: monitor matches, meetings, ratings and help requests, and manage the program.</p></div>
+    <form class="card auth-card" id="auth">
+      <h2 style="margin-top:0">${first ? "Create the first administrator" : "Admin sign-in"}</h2><div id="msg"></div>
+      ${first ? `<p class="form-note" style="margin-top:0">No admin account exists yet. Enter the setup code from the site settings (ADMIN_SETUP_CODE).</p>
+        <label>Setup code<input id="code" required autocomplete="off"></label><label>Your name<input id="name" required autocomplete="name"></label>` : ""}
+      <label>Email<input type="email" id="email" required autocomplete="username"></label>
+      <label>Password${first ? " (10+ characters)" : ""}<input type="password" id="password" required autocomplete="${first ? "new-password" : "current-password"}" ${first ? 'minlength="10"' : ""}></label>
+      <div class="actions" style="margin-top:16px"><button class="btn btn-primary btn-block" type="submit">${first ? "Create account and sign in" : "Sign in"}</button></div>
+      ${setup.needsSetup && !setup.setupEnabled ? `<p class="form-note">No admin accounts yet. Create one with <code>node admin-user.mjs</code>, or set <code>ADMIN_SETUP_CODE</code> in the site settings.</p>` : ""}
+      <p class="form-note">Not an admin? <a href="/login.html">Mentor and student sign-in</a>.</p>
+    </form>`
+  if (note) msg(note, "warn")
+  $("#auth").onsubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const r = first
+        ? await api("admin/setup", { code: $("#code").value, name: $("#name").value, email: $("#email").value, password: $("#password").value })
+        : await api("admin/login", { email: $("#email").value, password: $("#password").value })
+      S = r.session; session.set("admin", S); await refresh()
+    } catch (err) { msg(err.message, "err") }
+  }
+}
+
+async function refresh() {
+  try { O = await api("admin/overview", null, S); render() }
+  catch (e) { if (e.status === 401) { session.clear("admin"); S = ""; showLogin("Please sign in again.") } else $("#app").innerHTML = `<div class="alert alert-err">${esc(e.message)}</div>` }
+}
+
+async function act(body, confirmText) {
+  if (confirmText && !confirm(confirmText)) return
+  try {
+    const r = await api("admin/action", body, S)
+    O = r.overview; render(); msg(r.message)
+    if (r.url) showLink(r)
+    return r
+  } catch (e) { if (e.status === 401) return showLogin("Your session ended. Please sign in again."); msg(e.message, "err") }
+}
+
+// ---------- dashboard ----------
+const TABS = [["overview", "Overview"], ["alerts", "Alerts"], ["departments", "Departments"], ["matches", "Matches"], ["people", "People"], ["help", "Help requests"], ["activity", "Activity log"], ["admins", "Admin accounts"]]
+function render() {
+  const t = O.totals, me = O.me
+  const tabs = TABS.filter(([k]) => k !== "admins" || me.role === "admin")
+  if (!tabs.some(([k]) => k === TAB)) TAB = "overview"
+  $("#app").innerHTML = `<div class="page-head" style="padding-bottom:10px"><p class="eyebrow">Admin · ${me.role === "admin" ? "Administrator" : "Mentor Lead"}</p><h1>Program <span class="grad">monitor</span></h1></div>
+    <div class="ad-bar"><span class="who">Signed in as <b>${esc(me.name)}</b> (${esc(me.email)})${me.role === "lead" ? ` · ${esc(me.departments.join(", "))}` : " · all departments"} · updated ${fmtT(O.now)}</span>
+      <span class="acts"><button class="btn btn-ghost btn-small" id="bRefresh">↻ Refresh</button><button class="btn btn-ghost btn-small" id="bMatch">Run matching</button>
+      <button class="btn btn-ghost btn-small" id="bPw">Change password</button><button class="btn btn-ghost btn-small" id="bOut">Sign out</button></span></div>
+    <div id="msg"></div>
+    <div class="ad-tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" data-tab="${k}" aria-selected="${k === TAB}">${l}${k === "alerts" && O.alerts.length ? `<span class="n">${O.alerts.length}</span>` : ""}</button>`).join("")}</div>
+    <section id="pane"></section>`
+  $("#bRefresh").onclick = refresh
+  $("#bMatch").onclick = () => act({ action: "runMatching" })
+  $("#bOut").onclick = () => { session.clear("admin"); S = ""; O = null; TAB = "overview"; showLogin() }
+  $("#bPw").onclick = changePassword
+  ;({ overview: pOverview, alerts: pAlerts, departments: pDepts, matches: pMatches, people: pPeople, help: pHelp, activity: pActivity, admins: pAdmins })[TAB]()
+}
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-tab]"); if (t) { TAB = t.dataset.tab; render(); return }
+  const b = e.target.closest("[data-do]"); if (!b) return
+  const d = b.dataset
+  if (d.do === "endMatch") act({ action: "endMatch", matchId: d.id }, `End match ${d.id}? Both people stay signed up; the student will be matched again when a mentor has room.`)
+  if (d.do === "rematch") act({ action: "rematch", matchId: d.id }, `Rematch ${d.id} with a different mentor?`)
+  if (d.do === "withdraw") act({ action: "withdraw", id: d.id }, `Withdraw ${d.id}? Their active matches end.`)
+  if (d.do === "reinstate") act({ action: "reinstate", id: d.id })
+  if (d.do === "resetLink") act({ action: "resetLink", id: d.id }, `Issue a new private link for ${d.id}? Their old link and password stop working.`)
+  if (d.do === "lead") setLead(d.id)
+  if (d.do === "disableAdmin" || d.do === "enableAdmin") act({ action: d.do, adminId: d.id })
+  if (d.do === "goto") { TAB = d.id; render() }
+  if (d.do === "csv") csv(d.id)
+})
+
+function pOverview() {
+  const t = O.totals, f = O.funnel, max = Math.max(1, ...f.map((x) => x[1]))
+  const wk = O.weeks, wmax = Math.max(1, ...wk.map((w) => w.mentors + w.mentees + w.help + w.meetings))
+  $("#pane").innerHTML = `<div class="kpis">
+      <div class="kpi"><span>Mentors</span><b>${t.mentors}</b><small>${t.trained} trained · ${t.openSlots} open slots</small></div>
+      <div class="kpi"><span>Students</span><b>${t.mentees}</b><small>${t.waiting} waiting for a mentor</small></div>
+      <div class="kpi"><span>Active matches</span><b>${t.matches}</b><small>${pct(t.meeting1, t.matches)} had meeting 1</small></div>
+      <div class="kpi"><span>Completed</span><b>${t.completed}</b><small>${pct(t.completed, t.matches)} of matches</small></div>
+      <div class="kpi"><span>Average rating</span><b>${t.rating ?? "–"}</b><small>${t.rated} match(es) rated</small></div>
+      <div class="kpi"><span>Help requests</span><b>${t.helpOpen}</b><small>open · ${t.helpResolved} resolved</small></div>
+      <div class="kpi"><span>Alerts</span><b style="color:${O.alerts.length ? "var(--err)" : "var(--ok)"}">${O.alerts.length}</b><small><a href="#" data-do="goto" data-id="alerts">Review alerts →</a></small></div>
+      <div class="kpi"><span>Password sign-in</span><b>${t.withPassword}</b><small>people with a password</small></div>
+    </div>
+    <div class="two">
+      <div class="card"><h3 style="margin-top:0">Mentorship funnel</h3>${f.map(([l, v]) => `<div class="hbar"><span>${esc(l)}</span><i style="width:${(v / max) * 100}%"></i><em>${v}</em></div>`).join("")}
+        <p class="form-note">Stalled: no first meeting ${O.thresholds.stallDays} days after matching. Overdue: no second meeting after ${O.thresholds.overdueDays} days.</p></div>
+      <div class="card"><h3 style="margin-top:0">Last 12 weeks</h3>
+        <div class="weeks" role="img" aria-label="Weekly sign-ups and meetings">${wk.map((w) => { const s = w.mentors + w.mentees + w.help; return `<div title="Week of ${fmtD(w.week)}: ${s} sign-ups, ${w.meetings} meetings"><i class="m" style="height:${(w.meetings / wmax) * 100}%"></i><i class="s" style="height:${(s / wmax) * 100}%"></i></div>` }).join("")}</div>
+        <div class="wlab">${wk.map((w, i) => `<span>${i % 3 === 0 ? new Date(w.week + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }) : ""}</span>`).join("")}</div>
+        <div class="legend"><span><i style="background:var(--red)"></i>Sign-ups</span><span><i style="background:#6b7280"></i>Meetings logged</span></div></div>
+    </div>
+    <h3>Departments</h3>${deptTable()}`
+}
+
+function deptTable() {
+  return `<div class="tbl-wrap"><table class="ad"><thead><tr><th>Department</th><th>Mentor Lead</th><th class="num">Mentors</th><th class="num">Trained</th><th class="num">Open slots</th><th class="num">Students</th><th class="num">Waiting</th><th class="num">Matches</th><th class="num">Meeting 1</th><th class="num">Completed</th><th class="num">Rating</th>${O.me.role === "admin" ? "<th></th>" : ""}</tr></thead><tbody>
+    ${O.departments.map((d) => `<tr><td><b>${esc(d.name)}</b></td><td>${d.lead ? `${esc(d.lead)}<small>${esc(d.leadEmail)}</small>` : `<span class="flag">None</span>`}</td>
+      <td class="num">${d.mentors}</td><td class="num">${d.trained}</td><td class="num">${d.openSlots}/${d.capacity}</td><td class="num">${d.students}</td><td class="num${d.waiting ? " flag" : ""}">${d.waiting}</td>
+      <td class="num">${d.matches}</td><td class="num">${pct(d.meeting1, d.matches)}</td><td class="num">${pct(d.completed, d.matches)}</td><td class="num">${d.rating ?? "–"}</td>
+      ${O.me.role === "admin" ? `<td><button class="btn btn-ghost btn-small" data-do="lead" data-id="${esc(d.name)}">Set lead</button></td>` : ""}</tr>`).join("")}</tbody></table></div>`
+}
+function pDepts() { $("#pane").innerHTML = deptTable() }
+
+function pAlerts() {
+  $("#pane").innerHTML = O.alerts.length ? `<div class="tbl-wrap"><table class="ad"><thead><tr><th>Level</th><th>Alert</th><th>Who</th><th>Department</th><th>Detail</th><th>Actions</th></tr></thead><tbody>
+    ${O.alerts.map((a) => `<tr><td><span class="lvl ${a.level}">${a.level}</span></td><td><b>${esc(a.kind)}</b></td><td>${esc(a.who)}<small>${esc(a.id)}</small></td><td>${esc(a.dept)}</td><td>${esc(a.detail)}</td>
+      <td class="acts">${/^M-/.test(a.id) ? `<button class="btn btn-ghost" data-do="rematch" data-id="${a.id}">Rematch</button><button class="btn btn-ghost" data-do="endMatch" data-id="${a.id}">End</button>` : /^U-/.test(a.id) ? `<button class="btn btn-ghost" data-do="goto" data-id="departments">Capacity</button>` : ""}
+      ${/^[UGH]-/.test(a.id) ? `<button class="btn btn-ghost" data-do="resetLink" data-id="${a.id}">New link</button>` : ""}</td></tr>`).join("")}</tbody></table></div>`
+    : `<div class="alert alert-ok">No alerts. Every student is matched, meetings are on track and no low ratings.</div>`
+}
+
+let mFilter = "all"
+function pMatches() {
+  const rows = O.matches.filter((m) => mFilter === "all" || (mFilter === "active" ? m.status !== "Withdrawn" && !m.meeting2 : mFilter === "completed" ? !!m.meeting2 && m.status !== "Withdrawn" : mFilter === "ended" ? m.status === "Withdrawn" : m.flag === mFilter))
+  $("#pane").innerHTML = `<div class="filters"><select id="mf">${[["all", "All matches"], ["active", "In progress"], ["stalled", "Stalled"], ["overdue", "Overdue"], ["completed", "Completed"], ["ended", "Ended"]].map(([v, l]) => `<option value="${v}"${v === mFilter ? " selected" : ""}>${l}</option>`).join("")}</select>
+    <span class="form-note">${rows.length} shown</span><button class="btn btn-ghost btn-small" data-do="csv" data-id="matches">Export CSV</button></div>
+    <div class="tbl-wrap"><table class="ad"><thead><tr><th>Match</th><th>Mentor</th><th>Student</th><th>Department</th><th class="num">Score</th><th>Meeting 1</th><th>Meeting 2</th><th>Ratings (student / mentor)</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    ${rows.map((m) => `<tr><td><b>${m.id}</b><small>${fmtD(m.createdAt)} · ${m.ageDays} d</small></td><td>${esc(m.mentor.name)}<small>${esc(m.mentor.email)}</small></td><td>${esc(m.mentee.name)}<small>${esc(m.mentee.email)}</small></td>
+      <td>${esc(m.department)}</td><td class="num">${m.score}</td><td>${fmtD(m.meeting1) || "–"}</td><td>${fmtD(m.meeting2) || "–"}</td><td>${stars(m.menteeRating)}<small>${stars(m.mentorRating)}</small></td>
+      <td>${esc(m.status)}${m.flag ? `<small class="flag">${m.flag}</small>` : ""}</td>
+      <td class="acts">${m.status !== "Withdrawn" ? `<button class="btn btn-ghost" data-do="rematch" data-id="${m.id}">Rematch</button><button class="btn btn-ghost" data-do="endMatch" data-id="${m.id}">End</button>` : ""}</td></tr>`).join("") || `<tr><td colspan="10">No matches.</td></tr>`}</tbody></table></div>`
+  $("#mf").onchange = (e) => { mFilter = e.target.value; pMatches() }
+}
+
+let pq = "", pr = "all"
+function pPeople() {
+  const q = pq.toLowerCase()
+  const rows = O.people.filter((p) => (pr === "all" || p.role === pr) && (!q || [p.name, p.email, p.id, p.department].join(" ").toLowerCase().includes(q)))
+  $("#pane").innerHTML = `<div class="filters"><input type="search" id="pq" placeholder="Search name, email, ID, department" value="${esc(pq)}">
+    <select id="pr">${[["all", "Everyone"], ["mentor", "Mentors"], ["mentee", "Students"], ["help", "Help requesters"]].map(([v, l]) => `<option value="${v}"${v === pr ? " selected" : ""}>${l}</option>`).join("")}</select>
+    <span class="form-note">${rows.length} shown</span><button class="btn btn-ghost btn-small" data-do="csv" data-id="people">Export CSV</button></div>
+    <div class="tbl-wrap"><table class="ad"><thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Details</th><th>Signed up</th><th>Training</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    ${rows.map((p) => `<tr><td><b>${esc(p.name)}</b><small>${esc(p.email)} · ${p.id}</small></td><td>${{ mentor: "Mentor", mentee: "Student", help: "Help" }[p.role]}</td><td>${esc(p.department)}</td><td>${esc(p.detail)}</td><td>${fmtD(p.createdAt)}</td>
+      <td>${p.role === "mentor" ? (p.trainedAt ? "✅ " + fmtD(p.trainedAt) : `<span class="flag">Not yet</span>`) : ""}</td><td>${esc(p.status)}${p.hasPassword ? "<small>password set</small>" : ""}</td>
+      <td class="acts">${p.status === "Withdrawn" ? `<button class="btn btn-ghost" data-do="reinstate" data-id="${p.id}">Reinstate</button>` : `<button class="btn btn-ghost" data-do="withdraw" data-id="${p.id}">Withdraw</button>`}<button class="btn btn-ghost" data-do="resetLink" data-id="${p.id}">New link</button></td></tr>`).join("") || `<tr><td colspan="8">Nobody matches.</td></tr>`}</tbody></table></div>`
+  $("#pq").oninput = (e) => { pq = e.target.value; const pos = e.target.selectionStart; pPeople(); const i = $("#pq"); i.focus(); i.setSelectionRange(pos, pos) }
+  $("#pr").onchange = (e) => { pr = e.target.value; pPeople() }
+}
+
+function pHelp() {
+  $("#pane").innerHTML = `<div class="tbl-wrap"><table class="ad"><thead><tr><th>Request</th><th>Department</th><th>Applying to</th><th>Topics</th><th>Deadline</th><th>Volunteer</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    ${O.help.map((h) => `<tr><td><b>${esc(h.name)}</b><small>${esc(h.email)} · ${h.id} · ${fmtD(h.createdAt)}</small></td><td>${esc(h.department)}</td><td>${esc(h.applicationType)}</td><td>${esc((h.topics || []).join(", "))}</td>
+      <td>${fmtD(h.deadline) || "–"}</td><td>${esc(h.helper || "–")}</td><td>${esc(h.status)}</td><td class="acts">${h.status === "Withdrawn" ? `<button class="btn btn-ghost" data-do="reinstate" data-id="${h.id}">Reinstate</button>` : `<button class="btn btn-ghost" data-do="withdraw" data-id="${h.id}">Withdraw</button>`}</td></tr>`).join("") || `<tr><td colspan="8">No help requests.</td></tr>`}</tbody></table></div>`
+}
+
+function pActivity() {
+  $("#pane").innerHTML = `<p class="form-note" style="margin-top:0">Every admin sign-in and action is recorded. Showing the latest ${O.audit.length}.</p>
+    <div class="tbl-wrap"><table class="ad"><thead><tr><th>When</th><th>Who</th><th>What</th><th>Note</th></tr></thead><tbody>
+    ${O.audit.map((a) => `<tr><td>${fmtT(a.at)}</td><td>${esc(a.by)}<small>${esc(a.role)}</small></td><td>${esc(a.action)}</td><td>${esc(a.detail)}</td></tr>`).join("") || `<tr><td colspan="4">No activity yet.</td></tr>`}</tbody></table></div>`
+}
+
+function pAdmins() {
+  $("#pane").innerHTML = `<div class="filters"><button class="btn btn-primary btn-small" id="bAdd">Add an admin or Mentor Lead</button></div>
+    <div class="tbl-wrap"><table class="ad"><thead><tr><th>Name</th><th>Role</th><th>Departments</th><th>Created</th><th>Last sign-in</th><th>Status</th><th></th></tr></thead><tbody>
+    ${O.admins.map((a) => `<tr><td><b>${esc(a.name)}</b><small>${esc(a.email)} · ${a.id}</small></td><td>${a.role === "admin" ? "Administrator" : "Mentor Lead"}</td><td>${esc(a.departments.join(", ") || "All")}</td>
+      <td>${fmtD(a.createdAt)}</td><td>${fmtT(a.lastLogin) || "Never"}</td><td>${a.active ? "Active" : "Disabled"}</td>
+      <td>${a.id === O.me.id ? "You" : `<button class="btn btn-ghost btn-small" data-do="${a.active ? "disableAdmin" : "enableAdmin"}" data-id="${a.id}">${a.active ? "Disable" : "Enable"}</button>`}</td></tr>`).join("")}</tbody></table></div>`
+  $("#bAdd").onclick = addAdmin
+}
+
+// ---------- dialogs ----------
+function dialog(html, onSubmit) {
+  const d = $("#dlg"); d.innerHTML = `<form method="dialog" id="dForm">${html}<div id="dMsg"></div><div class="actions" style="margin-top:16px"><button class="btn btn-primary" value="ok">Save</button><button class="btn btn-ghost" value="cancel" formnovalidate>Cancel</button></div></form>`
+  d.showModal()
+  $("#dForm").onsubmit = async (e) => {
+    if (e.submitter?.value === "cancel") return
+    e.preventDefault()
+    const r = await onSubmit(); if (r) d.close()
+  }
+}
+function addAdmin() {
+  dialog(`<h3 style="margin-top:0">Add an account</h3>
+    <label>Name<input id="aName" required></label><label>Email<input id="aEmail" type="email" required></label>
+    <label>Role<select id="aRole"><option value="lead">Mentor Lead (their departments only)</option><option value="admin">Administrator (everything)</option></select></label>
+    <label>Departments (Mentor Lead)<select id="aDept" multiple size="4">${O.departmentNames.map((d) => `<option>${esc(d)}</option>`).join("")}</select></label>
+    <label>Temporary password (10+ characters)<input id="aPw" type="text" minlength="10" required></label>
+    <p class="form-note">Share the password privately; they can change it after signing in.</p>`,
+    () => act({ action: "addAdmin", name: $("#aName").value, email: $("#aEmail").value, role: $("#aRole").value, departments: [...$("#aDept").selectedOptions].map((o) => o.value), password: $("#aPw").value }))
+}
+function setLead(dept) {
+  const d = O.departments.find((x) => x.name === dept)
+  dialog(`<h3 style="margin-top:0">Mentor Lead: ${esc(dept)}</h3><label>Name<input id="lName" value="${esc(d.lead)}"></label><label>Email<input id="lEmail" type="email" value="${esc(d.leadEmail)}"></label>
+    <p class="form-note">Shown to mentors and students in this department as their first contact. To give them dashboard access, also add a Mentor Lead account.</p>`,
+    () => act({ action: "setLead", department: dept, lead: $("#lName").value, leadEmail: $("#lEmail").value }))
+}
+function changePassword() {
+  dialog(`<h3 style="margin-top:0">Change your password</h3><label>Current password<input id="cOld" type="password" required autocomplete="current-password"></label>
+    <label>New password (10+ characters)<input id="cNew" type="password" minlength="10" required autocomplete="new-password"></label>`,
+    () => act({ action: "changePassword", current: $("#cOld").value, password: $("#cNew").value }))
+}
+function showLink(r) {
+  const d = $("#dlg")
+  d.innerHTML = `<h3 style="margin-top:0">New private link for ${esc(r.name)}</h3><p>Send this to <b>${esc(r.email)}</b>. Their old link and any password no longer work.</p>
+    <p class="linkbox" id="lnk">${esc(r.url)}</p><div class="actions"><button class="btn btn-primary" id="cp">Copy link</button>
+    <a class="btn btn-ghost" href="mailto:${esc(r.email)}?subject=${encodeURIComponent("Your new ScholarLink link")}&body=${encodeURIComponent(`Hi ${r.name},\n\nHere is your new private ScholarLink link:\n${r.url}\n\nKeep it safe; it's how you sign in. You can also set a password on that page.\n`)}">Email it</a>
+    <button class="btn btn-ghost" id="cl">Close</button></div>`
+  d.showModal()
+  $("#cp").onclick = () => navigator.clipboard?.writeText(r.url).then(() => ($("#cp").textContent = "Copied ✓"))
+  $("#cl").onclick = () => d.close()
+}
+
+// ---------- CSV ----------
+function csv(kind) {
+  const rows = kind === "matches"
+    ? [["Match", "Department", "Mentor", "Mentor email", "Student", "Student email", "Score", "Created", "Meeting 1", "Meeting 2", "Student rating", "Mentor rating", "Status", "Flag"],
+       ...O.matches.map((m) => [m.id, m.department, m.mentor.name, m.mentor.email, m.mentee.name, m.mentee.email, m.score, m.createdAt.slice(0, 10), m.meeting1 || "", m.meeting2 || "", m.menteeRating || "", m.mentorRating || "", m.status, m.flag])]
+    : [["ID", "Role", "Name", "Email", "Department", "Details", "Signed up", "Trained", "Status"],
+       ...O.people.map((p) => [p.id, p.role, p.name, p.email, p.department, p.detail, p.createdAt.slice(0, 10), p.trainedAt ? p.trainedAt.slice(0, 10) : "", p.status])]
+  const text = rows.map((r) => r.map((v) => { const s = String(v ?? ""); return /[",\n]/.test(s) || /^[=+\-@]/.test(s) ? `"${(/^[=+\-@]/.test(s) ? "'" : "") + s.replace(/"/g, '""')}"` : s }).join(",")).join("\n")
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/csv" })); a.download = `scholarlink-${kind}-${O.now.slice(0, 10)}.csv`; a.click()
+}
+
+S ? refresh() : showLogin()
+</script>
+</body>
+</html>

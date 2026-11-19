@@ -168,8 +168,19 @@ function renderCertificate() {
     e.preventDefault()
     state.name = $("#certName").value.trim(); state.agreed = true; state.certified ||= new Date().toISOString(); save()
     drawCert(state.name, new Date(state.certified))
+    recordTraining()
   }
   if (state.agreed && state.name) drawCert(state.name, new Date(state.certified))
+}
+
+// Record completion on the mentor's ScholarLink page when they're signed in or have their private link here.
+async function recordTraining() {
+  const body = { action: "training", version: T.version }
+  try {
+    if (session.get()) { await api("me/update", body, session.get()); toast("Training recorded on your ScholarLink page ✓"); return }
+    const link = store.get().map((x) => new URL(x.url, location.origin)).find((u) => /^G-/.test(u.searchParams.get("id") || ""))
+    if (link) { await api("update", { ...body, id: link.searchParams.get("id"), token: link.searchParams.get("t") }); toast("Training recorded on your ScholarLink page ✓") }
+  } catch {}
 }
 
 function drawCert(name, when) {

@@ -1,6 +1,7 @@
 // Validation, matching, and views. Pure functions over the loaded data, so they're easy to test.
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import type { Data, TxResult } from "./store.mts"
+import { hashPassword, validPassword } from "./auth.mts"
 
 export class HttpError extends Error {
   status: number
@@ -11,7 +12,7 @@ export class HttpError extends Error {
 }
 
 const OTHER_DEPT = "Other / not listed"
-const ACTIVE = (m: any) => m.status !== "Withdrawn"
+export const ACTIVE = (m: any) => m.status !== "Withdrawn"
 
 // ---------- input helpers ----------
 const clean = (v: unknown, max: number) =>
@@ -60,8 +61,8 @@ export function nextId(prefix: string, list: any[]): string {
   const max = list.reduce((n, x) => Math.max(n, Number(String(x.id).split("-")[1]) || 0), 0)
   return `${prefix}-${String(max + 1).padStart(3, "0")}`
 }
-const hash = (t: string) => createHash("sha256").update(t).digest("hex")
-const newToken = () => randomBytes(18).toString("base64url")
+export const hash = (t: string) => createHash("sha256").update(t).digest("hex")
+export const newToken = () => randomBytes(18).toString("base64url")
 
 // ---------- matching ----------
 export function score(mentee: any, mentor: any, w: any) {
@@ -307,6 +308,12 @@ function collectionFor(id: string): "mentees" | "mentors" | "help" {
   throw new HttpError(404, "That link isn't valid.")
 }
 
+export function recordFor(data: Data, id: string): any {
+  const rec = data[collectionFor(id)].find((x: any) => x.id === id)
+  if (!rec || rec.status === "Withdrawn") throw new HttpError(401, "Please sign in again.")
+  return rec
+}
+
 export function authenticate(data: Data, id: string, token: string): any {
   const rec = data[collectionFor(id)].find((x: any) => x.id === id)
   const a = Buffer.from(rec ? rec.tokenHash : "x".repeat(64))
@@ -327,7 +334,7 @@ export function viewFor(data: Data, id: string): any {
     const match = data.matches.find((m: any) => m.menteeId === id && ACTIVE(m))
     const mentor = match && data.mentors.find((x: any) => x.id === match.mentorId)
     return {
-      role: "mentee", id, name: me.name, department: me.department,
+      role: "mentee", id, name: me.name, department: me.department, email: me.email, hasPassword: !!me.passwordHash,
       year: me.year, major: me.major, interests: me.interests,
       lead: leadFor(data, me.department),
       match: match && mentor ? {
@@ -341,7 +348,7 @@ export function viewFor(data: Data, id: string): any {
   if (kind === "mentors") {
     const me = data.mentors.find((x: any) => x.id === id)
     return {
-      role: "mentor", id, name: me.name, department: me.department,
+      role: "mentor", id, name: me.name, department: me.department, email: me.email, hasPassword: !!me.passwordHash, trainedAt: me.trainedAt || null,
       program: me.program, research: me.research,
       maxMentees: me.maxMentees, openSlots: openSlots(me, data.matches),
       helpsWithApplications: me.helpsWithApplications,
@@ -365,7 +372,7 @@ export function viewFor(data: Data, id: string): any {
   const h = data.help.find((x: any) => x.id === id)
   const helper = h.helperId && data.mentors.find((x: any) => x.id === h.helperId)
   return {
-    role: "help", id, name: h.name, status: h.status, createdAt: h.createdAt,
+    role: "help", id, name: h.name, status: h.status, createdAt: h.createdAt, email: h.email, hasPassword: !!h.passwordHash,
     topics: h.topics, deadline: h.deadline, applicationType: h.applicationType,
     lead: leadFor(data, h.department),
     helper: helper ? { name: helper.name, email: helper.email, program: helper.program, department: helper.department, research: helper.research } : null,
@@ -373,9 +380,9 @@ export function viewFor(data: Data, id: string): any {
 }
 
 // ---------- updates from the personal page ----------
-export function applyUpdate(data: Data, body: any, now: string): TxResult<any> {
-  const id = clean(body.id, 12)
-  const me = authenticate(data, id, body.token)
+export function applyUpdate(data: Data, body: any, now: string, sessionId?: string): TxResult<any> {
+  const id = sessionId || clean(body.id, 12)
+  const me = sessionId ? recordFor(data, sessionId) : authenticate(data, id, body.token)
   const role = collectionFor(id)
   const today = now.slice(0, 10)
 
@@ -401,6 +408,19 @@ export function applyUpdate(data: Data, body: any, now: string): TxResult<any> {
       match[role === "mentees" ? "menteeRating" : "mentorRating"] = rating
     }
     return { changes: { matches: data.matches }, message: `Update ${match.id} (${body.action}) by ${id}`, result: { view: viewFor(data, id) } }
+  }
+
+  if (body.action === "setPassword") {
+    me.passwordHash = hashPassword(validPassword(body.password))
+    me.passwordSetAt = now
+    return { changes: { [role]: data[role] }, message: `Password set for ${id}`, result: { view: viewFor(data, id), message: "Password saved. You can now sign in with your email and password." } }
+  }
+
+  if (body.action === "training") {
+    if (role !== "mentors") throw new HttpError(400, "Training is recorded for mentors.")
+    me.trainedAt = me.trainedAt || now
+    me.trainingVersion = clean(body.version, 20)
+    return { changes: { mentors: data.mentors }, message: `Training completed by ${id}`, result: { view: viewFor(data, id) } }
   }
 
   if (body.action === "resolveHelp") {
